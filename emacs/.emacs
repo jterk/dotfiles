@@ -126,6 +126,8 @@ Emacs.  Based on code by Titus von der Malsburg."
 ;; For tramp
 (setq shell-file-name "/bin/bash")
 
+(require 'jterk-mu4e)
+
 ;; Set mu4e defaults from first account in the list
 (mu4e-apply-account-vars (cdr (assoc my-mu4e-default-account my-mu4e-account-alist)))
 
@@ -726,6 +728,7 @@ functionality."
 
 (add-hook 'eshell-mode-hook
           (lambda ()
+            (eshell-smart-initialize)
             (setq show-trailing-whitespace nil)))
 
 (add-hook 'git-commit-setup-hook
