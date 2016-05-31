@@ -499,7 +499,8 @@ active region no formatting is performed."
                            "\\*magit-process:"
                            "\\*magit-diff:"
                            "\\*magit-revision:"
-                           "\\*magit-log:"))
+                           "\\*magit-log:"
+                           "\\*magit-refs:"))
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode t)
