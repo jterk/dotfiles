@@ -759,6 +759,38 @@ functionality."
 ;; Move between windows with SHIFT + arrow
 (windmove-default-keybindings)
 
+(defconst jterk/eshell-csi-regexp "\033\\[\\([0-9]*G\\|\\?25h\\)"
+  "Regexp that matches ANSI CSI codes.")
+
+(defun jterk/eshell-handle-control-codes ()
+  "Attempt to handle (some) ANSI codes.
+
+Currently limited to stripping problematic codes."
+  (save-excursion
+    (goto-char eshell-last-output-block-begin)
+    (unless (eolp)
+      (beginning-of-line))
+    (while (re-search-forward jterk/eshell-csi-regexp eshell-last-output-end t)
+      (replace-match ""))))
+
+(add-to-list 'eshell-output-filter-functions 'jterk/eshell-handle-control-codes)
+
+(autoload 'ansi-color-apply-on-region "ansi-color")
+
+(defun jterk/compilation-filter-hook ()
+  "Compilation filter.
+
+Uses `ansi-color-apply-on-region' to handle ANSI color codes, and
+strips other problematic ANSI codes."
+  (save-excursion
+    (let ((end (point)))
+      (ansi-color-apply-on-region compilation-filter-start end)
+      (goto-char compilation-filter-start)
+      (while (re-search-forward jterk/eshell-csi-regexp eshell-last-output-end t)
+        (replace-match "")))))
+
+(add-hook 'compilation-filter-hook 'jterk/compilation-filter-hook)
+
 (provide '.emacs)
 
 ;;; .emacs ends here
