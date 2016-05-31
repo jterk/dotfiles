@@ -736,6 +736,10 @@ functionality."
           (lambda ()
             (flyspell-mode)))
 
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (flyspell-prog-mode)))
+
 (use-package coffee-mode
   :ensure t
   :bind ("C-c C-C" . shyp/coffee-compile)
