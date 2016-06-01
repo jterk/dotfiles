@@ -47,13 +47,13 @@
 (use-package org
   :ensure t)
 (defvar jterk/org-todo-file)
-(setq jterk/org-todo-file (concat my-home "docs/org/todo.org"))
+(setq jterk/org-todo-file (concat my-home "sync/docs/org/todo.org"))
 (setq org-log-done t)
 (setq org-agenda-files (list jterk/org-todo-file))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-todo-keywords '("TODO" "STARTED" "WAITING" "DONE"))
 (setq org-default-notes-file jterk/org-todo-file)
-(setq org-directory (concat my-home "docs/org"))
+(setq org-directory (concat my-home "sync/docs/org"))
 
 (defvar org-mobile-inbox-for-pull)
 (defvar org-mobile-directory)
