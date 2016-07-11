@@ -743,6 +743,7 @@ functionality."
 (use-package coffee-mode
   :ensure t
   :bind ("C-c C-C" . shyp/coffee-compile)
+  :commands (coffee-repl)
   :config
   (add-hook 'coffee-mode-hook
             (lambda ()
