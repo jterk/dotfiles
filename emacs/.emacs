@@ -799,6 +799,10 @@ strips other problematic ANSI codes."
 
 (add-hook 'compilation-filter-hook 'jterk/compilation-filter-hook)
 
+(use-package visual-fill-column
+  :ensure t
+  :config
+  (add-hook 'visual-line-mode-hook 'visual-fill-column-mode))
 (provide '.emacs)
 
 ;;; .emacs ends here
