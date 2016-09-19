@@ -754,6 +754,7 @@ functionality."
   (add-hook 'coffee-mode-hook
             (lambda ()
               ;; Disable prompting for the compile-command
+              (setq fill-column 120)
               (set (make-local-variable 'compilation-read-command) nil)
               (set (make-local-variable 'compile-command)
                    (shyp/make-compile-command)))))
