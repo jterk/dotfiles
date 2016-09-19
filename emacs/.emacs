@@ -39,8 +39,11 @@
 
 ;; Configure PATH related vars from
 (use-package exec-path-from-shell
-  :ensure t)
-(exec-path-from-shell-initialize)
+  :ensure t
+  :config
+  (add-to-list `exec-path-from-shell-variables "GOPATH")
+  (exec-path-from-shell-initialize))
+
 (setenv "LC_ALL" "en_US.UTF-8")
 
 ;; org
