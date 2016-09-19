@@ -704,7 +704,10 @@ functionality."
 
 (require 'shyp)
 
-(use-package web-mode :ensure t)
+(use-package web-mode
+  :ensure t
+  :mode "\\.ejs\\'")
+
 (use-package htmlize :ensure t)
 (use-package markdown-mode :ensure t)
 (use-package ess :ensure t)
