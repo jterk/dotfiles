@@ -96,24 +96,12 @@ SEQUENCE."
 (setq message-sendmail-f-is-evil 't)
 (setq message-sendmail-extra-arguments '("--read-envelope-from"))
 
-(defun jterk/mu4e-shr2text ()
-  "Html to text using the shr engine.
-This can be used in `mu4e-html2text-command' in a new enough
-Emacs.  Based on code by Titus von der Malsburg."
-  (interactive)
-  (let ((dom (libxml-parse-html-region (point-min) (point-max)))
-        (shr-blocked-images "^https?.*")
-        (shr-table-horizontal-line ?-))
-    (erase-buffer)
-    (shr-insert-document dom)
-    (goto-char (point-min))))
-
 ;; mu4e settings
 (setq mu4e-maildir "~/Maildir"
       mu4e-attachment-dir  "~/Downloads"
       send-mail-function 'sendmail-send-it
       message-send-mail-function 'sendmail-send-it
-      mu4e-html2text-command 'jterk/mu4e-shr2text
+      mu4e-html2text-command 'mu4e-shr2text
       mu4e-update-interval 300
       mu4e-compose-keep-self-cc nil
       mu4e-headers-skip-duplicates t
