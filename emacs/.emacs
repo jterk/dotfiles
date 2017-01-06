@@ -533,10 +533,11 @@ active region no formatting is performed."
      (define-key python-mode-map (kbd "C-c C-d") 'helm-pydoc)))
 
 (use-package magit
-  :ensure t)
-(setq magit-repository-directories (list (concat my-home "dev")))
-(setq magit-last-seen-setup-instructions "1.4.0")
-(setq magit-fetch-arguments '("--prune"))
+  :ensure t
+  :config
+  (setq magit-repository-directories (list (concat my-home "dev")))
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (setq magit-fetch-arguments '("--prune")))
 
 ;; Use `magit-blame' instead of `vc-annotate'
 (global-set-key "\C-xvg" 'magit-blame)
