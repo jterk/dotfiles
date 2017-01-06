@@ -702,11 +702,6 @@ functionality."
 (use-package ess :ensure t)
 (use-package slime :ensure t)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (R . t)))
-
 (setq inferior-lisp-program "sbcl")
 (setq nginx-indent-level 2)
 (global-hl-line-mode)
