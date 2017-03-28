@@ -87,10 +87,10 @@ SEQUENCE."
   (mapconcat 'identity sequence (or separator " ")))
 
 ;; mu4e comes from Homebrew
-(require 'mu4e)
-(require 'mu4e-contrib)
-(require 'org-mu4e)
-(require 'mu4e-extensions)
+(use-package mu4e)
+(use-package mu4e-contrib)
+(use-package org-mu4e)
+(use-package mu4e-extensions)
 
 (setq sendmail-program (concat my-home "bin/msmtpq"))
 (setq message-sendmail-f-is-evil 't)
@@ -117,10 +117,10 @@ SEQUENCE."
 ;; For tramp
 (setq shell-file-name "/bin/bash")
 
-(require 'jterk-mu4e)
-
-;; Set mu4e defaults from first account in the list
-(mu4e-apply-account-vars (cdr (assoc my-mu4e-default-account my-mu4e-account-alist)))
+(use-package jterk-mu4e
+  :config
+  ;; Set mu4e defaults from first account in the list
+  (mu4e-apply-account-vars (cdr (assoc my-mu4e-default-account my-mu4e-account-alist))))
 
 ;; Blacklist some problematic email address patterns. Note that mu4e needs to be
 ;; restarted before changes here take effect.
@@ -195,7 +195,7 @@ Performs the following modifications:
 ;;             ;; to hold attachments for inline html images
 ;;
 ;; TODO: add customization; create pull request
-(require 'org-mu4e)
+(use-package org-mu4e)
 (defun org~mu4e-mime-convert-to-html ()
   "Convert the current body to html."
   (unless (fboundp 'org-export-string-as)
@@ -259,7 +259,7 @@ Performs the following modifications:
 (add-to-list 'default-frame-alist '(font . "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
 
 ;; Syntax Highlighting
-(require 'font-lock)
+(use-package font-lock)
 (cond ((fboundp 'global-font-lock-mode)
        (global-font-lock-mode t)
        (setq font-lock-maximum-decoration t)))
@@ -647,7 +647,7 @@ TODO: Add an (optional) type"
    (define-key org-mode-map (kbd "C-c s") 'jterk/org-insert-src-block)
    (define-key org-mode-map (kbd "C-c t") 'jterk/org-yank-sql-table)))
 
-(require 'org-table)
+(use-package org-table)
 (defun jterk/org-table-copy-right (n)
   "Copy a field right in the current row.
 
@@ -709,8 +709,8 @@ functionality."
             (setq show-trailing-whitespace nil)))
 
 ;; eshell
-(require 'eshell)
-(require 'em-smart)
+(use-package eshell)
+(use-package em-smart)
 (setq eshell-where-to-jump 'begin)
 (setq eshell-review-quick-commands nil)
 (setq eshell-smart-space-goes-to-end t)
