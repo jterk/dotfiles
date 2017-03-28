@@ -683,16 +683,6 @@ functionality."
       (kill-buffer scratch-buffer)))
 (find-file-noselect (concat my-home "tmp/*scratch*"))
 
-;; Make scratch buffers for different modes
-(mapc (lambda (mode)
-        (let* ((buffer-name (concat "*" (symbol-name mode) "-scratch*"))
-               (buffer (find-file-noselect (concat my-home "tmp/" buffer-name))))
-          (with-current-buffer buffer
-            (funcall mode))))
-      (list 'org-mode 'markdown-mode))
-
-(require 'shyp)
-
 (use-package web-mode
   :ensure t
   :mode "\\.ejs\\'")
@@ -701,6 +691,14 @@ functionality."
 (use-package markdown-mode :ensure t)
 (use-package ess :ensure t)
 (use-package slime :ensure t)
+
+;; Make scratch buffers for different modes
+(mapc (lambda (mode)
+        (let* ((buffer-name (concat "*" (symbol-name mode) "-scratch*"))
+               (buffer (find-file-noselect (concat my-home "tmp/" buffer-name))))
+          (with-current-buffer buffer
+            (funcall mode))))
+      (list 'org-mode 'markdown-mode))
 
 (setq inferior-lisp-program "sbcl")
 (setq nginx-indent-level 2)
