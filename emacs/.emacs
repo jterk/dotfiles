@@ -785,6 +785,11 @@ strips other problematic ANSI codes."
   :ensure t
   :config
   (add-hook 'visual-line-mode-hook 'visual-fill-column-mode))
-(provide '.emacs)
 
+(use-package flycheck
+  :ensure t
+  :config
+  (global-flycheck-mode))
+
+(provide '.emacs)
 ;;; .emacs ends here
