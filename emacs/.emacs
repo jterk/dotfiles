@@ -728,19 +728,6 @@ functionality."
           (lambda ()
             (flyspell-prog-mode)))
 
-(use-package coffee-mode
-  :ensure t
-  :bind ("C-c C-C" . shyp/coffee-compile)
-  :commands (coffee-repl)
-  :config
-  (add-hook 'coffee-mode-hook
-            (lambda ()
-              ;; Disable prompting for the compile-command
-              (setq fill-column 120)
-              (set (make-local-variable 'compilation-read-command) nil)
-              (set (make-local-variable 'compile-command)
-                   (shyp/make-compile-command)))))
-
 (use-package json-mode :ensure t)
 
 (use-package restclient
