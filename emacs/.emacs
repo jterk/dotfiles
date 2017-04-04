@@ -483,8 +483,10 @@ Otherwise returns 't.  This is intended to be used as:
   :ensure t
   :config
   (setq magit-repository-directories (list (concat my-home "dev")))
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  (setq magit-fetch-arguments '("--prune")))
+  (setq magit-fetch-arguments '("--prune"))
+  (magit-wip-after-apply-mode)
+  (magit-wip-after-save-mode)
+  (magit-wip-before-change-mode))
 
 ;; Use `magit-blame' instead of `vc-annotate'
 (global-set-key "\C-xvg" 'magit-blame)
