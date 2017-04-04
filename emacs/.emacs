@@ -698,5 +698,9 @@ strips other problematic ANSI codes."
 
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pyflakes-init)))
+
+(use-package yaml-mode
+  :ensure t)
+
 (provide '.emacs)
 ;;; .emacs ends here
