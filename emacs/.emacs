@@ -685,5 +685,18 @@ strips other problematic ANSI codes."
   :config
   (global-flycheck-mode))
 
+(use-package flymake
+  :config
+  (defun flymake-pyflakes-init ()
+    "Flymake for Python."
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "/usr/local/bin/pyflakes" (list local-file))))
+
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pyflakes-init)))
 (provide '.emacs)
 ;;; .emacs ends here
