@@ -506,46 +506,6 @@ Returns nil if LIST is nil or LIST contains only empty strings."
   (should (equal (list "astring") (trim-string-list (list "astring"))))
   (should (equal (list "1" "2" "3") (trim-string-list (list "" "" "1" "" "2" "3" "" "")))))
 
-(defun magit-gerrit-project-name ()
-  "Get the name of the current git repository.
-
-Uses `magit-get-top-dir' to find the root of the currect
-repository, stripping '.git', if present."
-  (let ((project-dir (directory-file-name (magit-git-dir))))
-    (save-match-data
-      (string-match "/[^/]*\\'" project-dir)
-      (substring project-dir (+ 1 (match-beginning 0))))))
-
-(defun magit-gerrit-default-reviewers (project)
-  "Get the default reviewers for PROJECT.
-Reads from `magit-gerrit-default-reviewers-alist'.  Returns the
-list of reviewers, or nil."
-  (cadr (assoc project magit-gerrit-default-reviewers-alist)))
-
-(defun magit-gerrit-submit-review (&optional reviewers)
-  "Submit a (set of) commit(s) to Gerrit for review.
-Determines the default reviewer(s) (if any) for the current
-project using `magit-gerrit-default-reviewers-alist' and then
-prompts for any additional reviewers.  The reviewer prompt offers
-completion based on `magit-gerrit-reviewers-list'.  Once the list
-of REVIEWERS is obtained, prompts for the name of the remote
-branch to which the review should be pushed.
-
-TODO: Once successful, put the URL of the review on the
-clipboard."
-  (interactive
-   (let ((default-reviewers (magit-gerrit-default-reviewers (magit-gerrit-project-name))))
-     (list (trim-string-list
-            (completing-read-multiple "Reviewers: " magit-gerrit-reviewers-list nil nil
-                                      (jterk/concat-with-separator default-reviewers ","))))))
-  (let ((branch (car (magit-log-read-revs))))
-    (magit-run-git-async
-     "push"
-     (if reviewers
-         (concat "--receive-pack=git receive-pack "
-                 (mapconcat (lambda (s) (concat "--reviewer=" s)) reviewers " ")))
-     "-v" "origin" (concat "HEAD:refs/for/" branch))))
-
 (defun insert-guid-at-point ()
   "Insert a GUID (globally unique identifier) at point."
   (interactive)
