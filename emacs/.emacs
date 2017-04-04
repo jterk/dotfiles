@@ -47,6 +47,10 @@
 (setenv "LC_ALL" "en_US.UTF-8")
 (setenv "PAGER" "cat")
 
+;; effectively disable customization by shunting it to an unused file
+(if (not (file-directory-p "~/tmp"))
+    (make-directory "~/tmp"))
+(setq custom-file "~/tmp/custom.el")
 
 ;; org
 (use-package org
