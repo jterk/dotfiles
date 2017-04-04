@@ -45,6 +45,8 @@
   (exec-path-from-shell-initialize))
 
 (setenv "LC_ALL" "en_US.UTF-8")
+(setenv "PAGER" "cat")
+
 
 ;; org
 (use-package org
