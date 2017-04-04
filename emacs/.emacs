@@ -444,47 +444,6 @@ Otherwise returns 't.  This is intended to be used as:
             (set-visited-file-name new-name)
             (set-buffer-modified-p nil))))))
 
-(defun java-find-tests ()
-  "Find the unit test files for the current (Java) buffer."
-  (interactive)
-  (let ((src-path "src/main/java")
-        (test-path "src/test/java"))
-    (if (buffer-visiting-file-p (buffer-name) buffer-file-name)
-        ;; Look for src/main/java in the file path
-        (if (not (and (string-match src-path buffer-file-name)
-                      (string-equal "java" (file-name-extension buffer-file-name))))
-            (message "'%s' doesn't appear to be a Java source file." buffer-file-name)
-          (let* ((src-filename (file-name-base buffer-file-name))
-                 (src-directory (file-name-directory buffer-file-name))
-                 (test-filename (concat src-filename "Test.java"))
-                 (test-directory (replace-regexp-in-string src-path test-path src-directory))
-                 (test-file-path (concat test-directory "/" test-filename)))
-            (if (file-exists-p test-file-path)
-                (find-file test-file-path)
-              (message "'%s' doesn't exist." test-file-path)))))))
-
-(defun my-eclim-java-format-region (prefix)
-  "Format a Java region.
-
-If PREFIX is not nil the entire buffer is formatted.
-
-If PREFIX is nil the active region is formatted.  If there is no
-active region no formatting is performed."
-  (interactive "P")
-  (if prefix
-      (eclim-java-format)
-    (if (not (use-region-p))
-        (message "No active region")
-      (eclim/execute-command
-       "java_format" "-p" "-f" ("-h" (region-beginning)) ("-t" (region-end)) "-e"))))
-
-;; C-c C-e f s should format the region, if possible.
-(defun my-eclim-hook ()
-  "My Eclim Hook."
-  (substitute-key-definition 'eclim-java-format 'my-eclim-java-format-region eclim-mode-map))
-
-(add-hook 'eclim-mode-hook 'my-eclim-hook)
-
 ;; info
 (setq Info-additional-directory-list (list "~/docs/info"))
 
@@ -503,24 +462,6 @@ active region no formatting is performed."
 (ido-mode t)
 
 (put 'upcase-region 'disabled nil)
-
-;; eclim
-(setq eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
-(setq eclim-autoupdate-problems t)
-(setq eclim-problems-hl-errors t)
-
-(when (file-exists-p eclim-executable)
-  (setq eclim-autoupdate-problems t)
-  (setq eclim-problems-hl-errors t)
-
-  (global-eclim-mode)
-
-  (setq eclim-use-yasnippet nil))
-
-(setq help-at-pt-display-when-idle t)
-(setq help-at-pt-timer-delay 0.1)
-
-(help-at-pt-set-timer)
 
 (use-package company
   :ensure t)
