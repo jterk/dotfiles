@@ -643,6 +643,11 @@ functionality."
 (use-package restclient
   :ensure t)
 
+;; Sometimes eshell doesn't cut it
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (setq show-trailing-whitespace nil)))
+
 ;; Move between windows with SHIFT + arrow
 (windmove-default-keybindings)
 
