@@ -45,6 +45,7 @@
   (exec-path-from-shell-initialize))
 
 (setenv "LC_ALL" "en_US.UTF-8")
+(setenv "EDITOR" "emacsclient")
 (setenv "PAGER" "cat")
 
 ;; effectively disable customization by shunting it to an unused file
