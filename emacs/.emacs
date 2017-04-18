@@ -714,5 +714,13 @@ strips other problematic ANSI codes."
 (use-package yaml-mode
   :ensure t)
 
+;; Stuff for work
+(let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
+  (if (file-exists-p db-emacs)
+      (progn
+        (add-to-list 'load-path db-emacs)
+        (require 'db)
+        (require 'stone-mode))))
+
 (provide '.emacs)
 ;;; .emacs ends here
