@@ -697,20 +697,6 @@ strips other problematic ANSI codes."
   :config
   (global-flycheck-mode))
 
-(use-package flymake
-  :config
-  (defun flymake-pyflakes-init ()
-    "Flymake for Python."
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list "/usr/local/bin/pyflakes" (list local-file))))
-
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.py\\'" flymake-pyflakes-init)))
-
 (use-package yaml-mode
   :ensure t)
 
@@ -720,7 +706,8 @@ strips other problematic ANSI codes."
       (progn
         (add-to-list 'load-path db-emacs)
         (require 'db)
-        (require 'stone-mode))))
+        (require 'stone-mode)
+        (require 'pyxl-mode))))
 
 (provide '.emacs)
 ;;; .emacs ends here
