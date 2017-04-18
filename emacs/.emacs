@@ -275,7 +275,7 @@ Performs the following modifications:
 (setq c-basic-offset 2)
 (setq css-indent-offset 2)
 (setq js-indent-level 2)
-(setq python-indent-offset 2)
+(setq python-indent-offset 4)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 (setq-default fill-column 80)
@@ -479,6 +479,10 @@ Otherwise returns 't.  This is intended to be used as:
 (eval-after-load "python"
   '(progn
      (define-key python-mode-map (kbd "C-c C-d") 'helm-pydoc)))
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq fill-column 100)))
 
 (use-package magit
   :ensure t
