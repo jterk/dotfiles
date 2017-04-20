@@ -700,6 +700,9 @@ strips other problematic ANSI codes."
 (use-package yaml-mode
   :ensure t)
 
+(use-package coffee-mode
+  :ensure t)
+
 ;; Stuff for work
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
   (if (file-exists-p db-emacs)
