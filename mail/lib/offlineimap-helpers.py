@@ -4,6 +4,13 @@
 # should be the SMTP server for the account; the "kind" should be "Internet
 # password", the "account" should be the account, the "where" should be
 # "smtp://SMTP_SERVER".
+#
+# An easy way to create the right keychain entry is with the following command
+# (specifying `-w` last will cause `security` to prompt you for the new
+# password:
+#
+#   security add-internet-password -a ACCOUNT -s SERVER -r smtp -w
+#
 import subprocess
 
 
