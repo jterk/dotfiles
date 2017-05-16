@@ -85,6 +85,8 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-unset-key (kbd "s-k"))
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "s-p"))
 
 ;; functions
 (defun jterk/concat-with-separator (sequence &optional separator)
