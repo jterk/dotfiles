@@ -716,5 +716,8 @@ strips other problematic ANSI codes."
         (require 'stone-mode)
         (require 'pyxl-mode))))
 
+(use-package go-mode
+  :ensure t)
+
 (provide '.emacs)
 ;;; .emacs ends here
