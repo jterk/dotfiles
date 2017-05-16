@@ -477,6 +477,11 @@ Otherwise returns 't.  This is intended to be used as:
 ;; haskell mode
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
+(use-package elpy
+  :ensure t
+  :config
+  (elpy-enable))
+
 ;; pydoc in python-mode
 (eval-after-load "python"
   '(progn
