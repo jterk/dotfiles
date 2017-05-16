@@ -719,5 +719,8 @@ strips other problematic ANSI codes."
 (use-package go-mode
   :ensure t)
 
+(use-package protobuf-mode
+  :ensure t)
+
 (provide '.emacs)
 ;;; .emacs ends here
