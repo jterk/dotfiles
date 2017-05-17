@@ -129,7 +129,7 @@ SEQUENCE."
 (use-package jterk-mu4e
   :config
   ;; Set mu4e defaults from first account in the list
-  (mu4e-apply-account-vars (cdr (assoc my-mu4e-default-account my-mu4e-account-alist))))
+  (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist))))
 
 ;; Blacklist some problematic email address patterns. Note that mu4e needs to be
 ;; restarted before changes here take effect.
@@ -150,9 +150,9 @@ SEQUENCE."
         "\\|")
        "\\)"))
 
-(add-hook 'mu4e-headers-mode-hook 'my-mu4e-disable-trailing-whitespace-hook)
-(add-hook 'mu4e-view-mode-hook 'my-mu4e-disable-trailing-whitespace-hook)
-(add-hook 'mu4e-view-mode-hook 'my-mu4e-configure-wrapping)
+(add-hook 'mu4e-headers-mode-hook 'mu4e-disable-trailing-whitespace-hook)
+(add-hook 'mu4e-view-mode-hook 'mu4e-disable-trailing-whitespace-hook)
+(add-hook 'mu4e-view-mode-hook 'mu4e-configure-wrapping)
 
 ;; soft wrap when composing
 (add-hook 'mu4e-compose-mode-hook
@@ -162,26 +162,29 @@ SEQUENCE."
             (setq message-fill-column nil)
             (visual-line-mode)))
 
-;; Dynamically determine the right trash folder to use based on the message being trashed.
+;; Dynamically determine the right trash folder to use based on the message
+;; being trashed. TODO consider moving to mu4e-extensions
 (setq mu4e-trash-folder
       (lambda (message)
-        (my-mu4e-get-folder message 'mu4e-trash-folder)))
+        (mu4e-get-folder message 'mu4e-trash-folder)))
 
-;; ... and refiling.
+;; ... and refiling. TODO consider moving to mu4e-extensions
 (setq mu4e-refile-folder
       (lambda (message)
-        (my-mu4e-get-folder message 'mu4e-refile-folder)))
+        (mu4e-get-folder message 'mu4e-refile-folder)))
 
 (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-(defun my-mu4e-headers-keybinding-hook ()
+(defun mu4e-headers-keybinding-hook ()
   "Key binding hook for the mu4e headers view.
 Performs the following modifications:
 
-* Binds 'o' to `mu4e-headers-view-message'"
+* Binds 'o' to `mu4e-headers-view-message'
+
+TODO: Consider making a local copy of the key map."
   (define-key mu4e-headers-mode-map (kbd "o") 'mu4e-headers-view-message))
 
-(add-hook 'mu4e-headers-mode-hook 'my-mu4e-headers-keybinding-hook)
+(add-hook 'mu4e-headers-mode-hook 'mu4e-headers-keybinding-hook)
 
 ;; Re-defined here since org -> HTML conversion is not customizable
 ;;

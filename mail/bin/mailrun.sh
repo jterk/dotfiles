@@ -15,6 +15,7 @@ FULL_SYNC_COMMAND="$OFFLINEIMAP -o -u quiet"
 FULL_SYNC_FILE=~/tmp/offlineimap.lastfullsync
 FULL_SYNC_INTERVAL=1800 # 30 minutes, in seconds
 INBOX_SYNC_COMMAND="$OFFLINEIMAP -o -f INBOX -u quiet"
+PIDFILE=~/.offlineimap/pid
 
 monitor() {
   local pid=$1 i=0
@@ -31,11 +32,15 @@ monitor() {
   return 0
 }
 
-read -r pid < /Users/jterk/.offlineimap/pid
+if [[ -e $PIDFILE ]]
+then
+      read -r pid < $PIDFILE
 
-if ps $pid &>/dev/null; then
-  echo "Process $pid already running. Exiting..." >&2
-  exit 1
+      if ps $pid &>/dev/null
+      then
+          echo "Process $pid already running. Exiting..." >&2
+          exit 1
+      fi
 fi
 
 curtime=$(date +%s)
