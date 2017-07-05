@@ -34,8 +34,20 @@
 
 ;; Set up the load path
 (defvar my-home (concat (getenv "HOME") "/") "Home is where the heart is.")
+
 (add-to-list 'load-path (concat my-home "emacs"))
 (add-to-list 'load-path (concat my-home "emacs-private"))
+
+
+(defvar jterk/dropbox)
+
+(defun jterk/dir-or-nil (dir)
+  "Return DIR if DIR exists and is a directory."
+  (if (file-directory-p dir) dir nil))
+
+(setq jterk/dropbox
+      (or (jterk/dir-or-nil (concat my-home "Dropbox (Personal)"))
+          (jterk/dir-or-nil (concat my-home "Dropbox"))))
 
 ;; Configure PATH related vars from
 (use-package exec-path-from-shell
@@ -54,16 +66,31 @@
 (setq custom-file "~/tmp/custom.el")
 
 ;; org
+;; TODO move configuration into `use-package' invocation
 (use-package org
   :ensure t)
-(defvar jterk/org-todo-file)
-(setq jterk/org-todo-file (concat my-home "sync/docs/org/todo.org"))
+
+(defvar jterk/org-refile-target)
+(setq jterk/org-refile-target (concat jterk/dropbox "/org/refile.org"))
+
+(setq org-agenda-files (list (concat jterk/dropbox "/org")))
+(setq org-default-notes-file jterk/org-refile-target)
 (setq org-log-done t)
-(setq org-agenda-files (list jterk/org-todo-file))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
-(setq org-todo-keywords '("TODO" "STARTED" "WAITING" "DONE"))
-(setq org-default-notes-file jterk/org-todo-file)
-(setq org-directory (concat my-home "sync/docs/org"))
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold)
+              ("MEETING" :foreground "forest green" :weight bold)
+              ("PHONE" :foreground "forest green" :weight bold))))
 
 (defvar org-mobile-inbox-for-pull)
 (defvar org-mobile-directory)
@@ -76,9 +103,28 @@
 (setq org-export-with-sub-superscripts '{})
 
 (defvar org-capture-templates)
+;; (setq org-capture-templates
+;;       '(("t" "TODO" entry (file jterk/org-refile-target)
+;;          "* TODO %?\n  %i\n  %a")))
+
+;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
 (setq org-capture-templates
-      '(("t" "TODO" entry (file+headline jterk/org-todo-file "Inbox")
-         "* TODO %?\n  %i\n  %a")))
+      (quote (("t" "todo" entry (file jterk/org-refile-target)
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("r" "respond" entry (file jterk/org-refile-target)
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+              ("n" "note" entry (file jterk/org-refile-target)
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+              ("w" "org-protocol" entry (file jterk/org-refile-target)
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+              ("m" "Meeting" entry (file jterk/org-refile-target)
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+              ("p" "Phone call" entry (file jterk/org-refile-target)
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+              ("h" "Habit" entry (file jterk/org-refile-target)
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
@@ -87,6 +133,7 @@
 (global-unset-key (kbd "s-k"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "s-p"))
+(global-unset-key (kbd "C-x C-z"))
 
 ;; functions
 (defun jterk/concat-with-separator (sequence &optional separator)
@@ -125,11 +172,7 @@ SEQUENCE."
 
 ;; For tramp
 (setq shell-file-name "/bin/bash")
-
-(use-package jterk-mu4e
-  :config
-  ;; Set mu4e defaults from first account in the list
-  (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist))))
+(setq tramp-auto-save-directory "~/tmp/tramp/")
 
 ;; Blacklist some problematic email address patterns. Note that mu4e needs to be
 ;; restarted before changes here take effect.
@@ -281,9 +324,10 @@ TODO: Consider making a local copy of the key map."
 (setq css-indent-offset 2)
 (setq js-indent-level 2)
 (setq python-indent-offset 4)
+(setq typescript-indent-level 2)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
-(setq-default fill-column 80)
+(setq-default fill-column 100)
 
 ;; Show trailing whitespace
 (setq-default show-trailing-whitespace 't)
@@ -490,10 +534,6 @@ Otherwise returns 't.  This is intended to be used as:
   '(progn
      (define-key python-mode-map (kbd "C-c C-d") 'helm-pydoc)))
 
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq fill-column 100)))
-
 (use-package magit
   :ensure t
   :config
@@ -532,6 +572,8 @@ Returns nil if LIST is nil or LIST contains only empty strings."
  web-mode-css-indent-offset 2
  web-mode-markup-indent-offset 2
  web-mode-script-padding 2)
+
+(add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
 
 ;; org-mode additions & customizations
 (defun jterk/org-yank-sql-table ()
@@ -702,6 +744,10 @@ strips other problematic ANSI codes."
 (use-package flycheck
   :ensure t
   :config
+  (define-key flycheck-mode-map flycheck-keymap-prefix nil)
+  (setq flycheck-keymap-prefix (kbd "C-c f"))
+  (define-key flycheck-mode-map flycheck-keymap-prefix
+    flycheck-command-map)
   (global-flycheck-mode))
 
 (use-package yaml-mode
@@ -717,12 +763,17 @@ strips other problematic ANSI codes."
         (add-to-list 'load-path db-emacs)
         (require 'db)
         (require 'stone-mode)
-        (require 'pyxl-mode))))
+        (require 'pyxl-mode)
+        (require 'jterk-mu4e)
+        (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist))))))
 
 (use-package go-mode
   :ensure t)
 
 (use-package protobuf-mode
+  :ensure t)
+
+(use-package typescript-mode
   :ensure t)
 
 (provide '.emacs)
