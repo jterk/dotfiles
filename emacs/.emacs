@@ -647,6 +647,8 @@ functionality."
       (kill-buffer scratch-buffer)))
 (find-file-noselect (concat my-home "tmp/*scratch*"))
 
+(use-package org-protocol)
+
 (use-package web-mode
   :ensure t
   :mode "\\.ejs\\'")
