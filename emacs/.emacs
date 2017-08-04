@@ -94,8 +94,9 @@
 
 (defvar org-mobile-inbox-for-pull)
 (defvar org-mobile-directory)
-(setq org-mobile-inbox-for-pull (concat org-directory "/mobile-inbox.org"))
-(setq org-mobile-directory (concat my-home "Dropbox/Apps/MobileOrg"))
+(setq org-directory (concat jterk/dropbox "/org"))
+(setq org-mobile-inbox-for-pull (concat jterk/dropbox "/org/mobile-inbox.org"))
+(setq org-mobile-directory (concat jterk/dropbox "/Apps/MobileOrg"))
 
 ;; Don't convert to super/subscript unless an explicit '{' and '}' pair is present
 (setq org-use-sub-superscripts '{})
