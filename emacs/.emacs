@@ -38,7 +38,6 @@
 (add-to-list 'load-path (concat my-home "emacs"))
 (add-to-list 'load-path (concat my-home "emacs-private"))
 
-
 (defvar jterk/dropbox)
 
 (defun jterk/dir-or-nil (dir)
@@ -324,18 +323,9 @@ TODO: Consider making a local copy of the key map."
 		  raw-body html (mapconcat 'identity html-images "\n"))))))
 
 ;; Colors
-(use-package zenburn-theme
-  :ensure t)
-;; Experimenting with a light theme
-;; (load-theme 'zenburn t)
-
-(use-package leuven-theme
-  :ensure t)
-;; (load-theme 'leuven t)
-
 (use-package solarized-theme
-  :ensure t)
-(load-theme 'solarized-light t)
+  :ensure t
+  :config (load-theme 'solarized-light t))
 
 ;; Font
 (set-frame-font "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
