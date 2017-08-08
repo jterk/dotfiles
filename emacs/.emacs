@@ -328,14 +328,13 @@ TODO: Consider making a local copy of the key map."
   :config (load-theme 'solarized-light t))
 
 ;; Font
-(set-frame-font "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
-;; (set-frame-font "-*-Hack-normal-normal-normal-*-10-*-*-*-m-0-iso10646-1")
-;; (set-face-attribute 'default nil :family "Menlo" :height 110)
+(defvar jterk/frame-font "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
+(set-frame-font jterk/frame-font)
 
 ;; Frame size
 (add-to-list 'default-frame-alist '(height . 65))
 (add-to-list 'default-frame-alist '(width . 202))
-(add-to-list 'default-frame-alist '(font . "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
+(add-to-list 'default-frame-alist `(font . ,jterk/frame-font))
 
 ;; Syntax Highlighting
 (use-package font-lock)
