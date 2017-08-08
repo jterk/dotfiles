@@ -337,10 +337,10 @@ TODO: Consider making a local copy of the key map."
 (add-to-list 'default-frame-alist `(font . ,jterk/frame-font))
 
 ;; Syntax Highlighting
-(use-package font-lock)
-(cond ((fboundp 'global-font-lock-mode)
-       (global-font-lock-mode t)
-       (setq font-lock-maximum-decoration t)))
+(use-package font-lock
+  :config (cond ((fboundp 'global-font-lock-mode)
+                 (global-font-lock-mode t)
+                 (setq font-lock-maximum-decoration t))))
 
 ;; Tabs -> 2 spaces
 (setq c-basic-offset 2)
