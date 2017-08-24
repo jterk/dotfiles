@@ -117,8 +117,6 @@
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
               ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
                "* %?\n%U\n" :clock-in t :clock-resume t)
-              ("w" "org-protocol" entry (file jterk/org-refile-target)
-               "* TODO Review %c\n%U\n" :immediate-finish t)
               ("m" "Meeting" entry (file jterk/org-refile-target)
                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
               ("p" "Phone call" entry (file jterk/org-refile-target)
@@ -668,8 +666,6 @@ functionality."
   (if scratch-buffer
       (kill-buffer scratch-buffer)))
 (find-file-noselect (concat my-home "tmp/*scratch*"))
-
-(use-package org-protocol)
 
 (use-package web-mode
   :ensure t
