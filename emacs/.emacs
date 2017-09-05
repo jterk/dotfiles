@@ -807,5 +807,15 @@ strips other problematic ANSI codes."
 (use-package typescript-mode
   :ensure t)
 
+(use-package pyvenv
+  :ensure t)
+
+(use-package auto-virtualenv
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+  (add-hook 'window-configuration-change-hook 'auto-virtualenv-set-virtualenv)
+  (add-hook 'focus-in-hook 'auto-virtualenv-set-virtualenv))
+
 (provide '.emacs)
 ;;; .emacs ends here
