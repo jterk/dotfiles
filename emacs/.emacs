@@ -789,7 +789,17 @@ strips other problematic ANSI codes."
         (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist))))))
 
 (use-package go-mode
-  :ensure t)
+  :ensure t
+  :config
+  (use-package go-autocomplete
+    :ensure t))
+
+(add-hook 'go-mode-hook
+          (lambda ()
+                  (add-hook 'before-save-hook 'gofmt-before-save)
+                  (local-set-key (kbd "M-.") 'godef-jump)
+                  (local-set-key (kbd "M-*") 'pop-tag-mark)
+                  (auto-complete-mode 1)))
 
 (use-package protobuf-mode
   :ensure t)
