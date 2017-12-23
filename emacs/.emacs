@@ -550,6 +550,9 @@ Otherwise returns 't.  This is intended to be used as:
   :config
   (elpy-enable))
 
+;; Use python-mode for pystachio files
+(add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
+
 ;; pydoc in python-mode
 (eval-after-load "python"
   '(progn
@@ -757,6 +760,26 @@ strips other problematic ANSI codes."
 
 (add-hook 'compilation-filter-hook 'jterk/compilation-filter-hook)
 
+;; Advice for `eshell-watch-for-password-prompt' to prevent prompting for a password when the string
+;; 'password:' appears in build/test output.
+(defun jterk/eshell-password-prompt-predicate ()
+  "Advice predicate for eshell-watch-for-password-prompt.
+
+Returns t if eshell-watch-for-password-prompt should be invoked."
+  (when (eshell-interactive-process)
+    (save-excursion
+      (let ((case-fold-search t))
+        (goto-char eshell-last-output-block-begin)
+        (beginning-of-line)
+        (if (re-search-forward "DEBUG.*LOGGER" eshell-last-output-end t)
+            nil
+          t)))))
+
+(advice-add
+ 'eshell-watch-for-password-prompt
+ :before-while
+ #'jterk/eshell-password-prompt-predicate)
+
 (use-package visual-fill-column
   :ensure t
   :config
@@ -816,6 +839,25 @@ strips other problematic ANSI codes."
   (add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
   (add-hook 'window-configuration-change-hook 'auto-virtualenv-set-virtualenv)
   (add-hook 'focus-in-hook 'auto-virtualenv-set-virtualenv))
+
+(use-package multiple-cursors
+  :ensure t
+  :config
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+
+(use-package plantuml-mode
+  :ensure t
+  :config
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2017.16/libexec/plantuml.jar"))
+
+;; Mitigate Bug#28350 (security) in Emacs 25.2 and earlier.
+;; TODO remove once this is resolved
+(eval-after-load "enriched"
+  '(defun enriched-decode-display-prop (start end &optional param)
+     (list start end)))
 
 (provide '.emacs)
 ;;; .emacs ends here
