@@ -853,6 +853,9 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   :config
   (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2017.16/libexec/plantuml.jar"))
 
+(use-package bazel-mode
+  :ensure t)
+
 ;; Mitigate Bug#28350 (security) in Emacs 25.2 and earlier.
 ;; TODO remove once this is resolved
 (eval-after-load "enriched"
