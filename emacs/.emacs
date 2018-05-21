@@ -67,106 +67,105 @@
 (setq custom-file "~/tmp/custom.el")
 
 ;; org
-;; TODO move configuration into `use-package' invocation
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
 (use-package org
-  :ensure t)
+  :ensure org-plus-contrib
+  :bind (("C-c l" . org-store-link)
+         ("C-c c" . org-capture)
+         ("C-c a" . org-agenda)
+         ("C-c b" . org-iswitchb))
+  :config
+  (defvar jterk/org-refile-target)
+  (setq jterk/org-refile-target (concat jterk/dropbox "/org/refile.org"))
 
-(defvar jterk/org-refile-target)
-(setq jterk/org-refile-target (concat jterk/dropbox "/org/refile.org"))
+  (setq org-agenda-files (list (concat jterk/dropbox "/org")))
+  (setq org-default-notes-file jterk/org-refile-target)
+  (setq org-log-done t)
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
-(setq org-agenda-files (list (concat jterk/dropbox "/org")))
-(setq org-default-notes-file jterk/org-refile-target)
-(setq org-log-done t)
-(setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("MEETING" :foreground "forest green" :weight bold)
+                ("PHONE" :foreground "forest green" :weight bold))))
 
-(setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
-              ("DONE" :foreground "forest green" :weight bold)
-              ("WAITING" :foreground "orange" :weight bold)
-              ("HOLD" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold)
-              ("MEETING" :foreground "forest green" :weight bold)
-              ("PHONE" :foreground "forest green" :weight bold))))
+  (defvar org-mobile-inbox-for-pull)
+  (defvar org-mobile-directory)
+  (setq org-directory (concat jterk/dropbox "/org"))
+  (setq org-mobile-inbox-for-pull (concat jterk/dropbox "/org/mobile-inbox.org"))
+  (setq org-mobile-directory (concat jterk/dropbox "/Apps/MobileOrg"))
 
-(defvar org-mobile-inbox-for-pull)
-(defvar org-mobile-directory)
-(setq org-directory (concat jterk/dropbox "/org"))
-(setq org-mobile-inbox-for-pull (concat jterk/dropbox "/org/mobile-inbox.org"))
-(setq org-mobile-directory (concat jterk/dropbox "/Apps/MobileOrg"))
+  ;; Don't convert to super/subscript unless an explicit '{' and '}' pair is present
+  (setq org-use-sub-superscripts '{})
+  (defvar org-export-with-sub-superscripts)
+  (setq org-export-with-sub-superscripts '{})
 
-;; Don't convert to super/subscript unless an explicit '{' and '}' pair is present
-(setq org-use-sub-superscripts '{})
-(defvar org-export-with-sub-superscripts)
-(setq org-export-with-sub-superscripts '{})
+  (defvar org-capture-templates)
+  ;; (setq org-capture-templates
+  ;;       '(("t" "TODO" entry (file jterk/org-refile-target)
+  ;;          "* TODO %?\n  %i\n  %a")))
 
-(defvar org-capture-templates)
-;; (setq org-capture-templates
-;;       '(("t" "TODO" entry (file jterk/org-refile-target)
-;;          "* TODO %?\n  %i\n  %a")))
+  ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+  (setq org-capture-templates
+        (quote (("t" "todo" entry (file jterk/org-refile-target)
+                 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("r" "respond" entry (file jterk/org-refile-target)
+                 "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+                ("n" "note" entry (file jterk/org-refile-target)
+                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
+                 "* %?\n%U\n" :clock-in t :clock-resume t)
+                ("m" "Meeting" entry (file jterk/org-refile-target)
+                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                ("p" "Phone call" entry (file jterk/org-refile-target)
+                 "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+                ("h" "Habit" entry (file jterk/org-refile-target)
+                 "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 
-;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
-(setq org-capture-templates
-      (quote (("t" "todo" entry (file jterk/org-refile-target)
-               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("r" "respond" entry (file jterk/org-refile-target)
-               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-              ("n" "note" entry (file jterk/org-refile-target)
-               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
-               "* %?\n%U\n" :clock-in t :clock-resume t)
-              ("m" "Meeting" entry (file jterk/org-refile-target)
-               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-              ("p" "Phone call" entry (file jterk/org-refile-target)
-               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-              ("h" "Habit" entry (file jterk/org-refile-target)
-               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+  ;; Ripped from http://doc.norang.ca/org-mode.html#Archiving
+  (defun bh/skip-non-archivable-tasks ()
+    "Skip trees that are not available for archiving."
+    (save-restriction
+      (widen)
+      ;; Consider only tasks with done todo headings as archivable candidates
+      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
+            (subtree-end (save-excursion (org-end-of-subtree t))))
+        (if (member (org-get-todo-state) org-todo-keywords-1)
+            (if (member (org-get-todo-state) org-done-keywords)
+                (let* ((daynr (string-to-number (format-time-string "%d" (current-time))))
+                       (a-month-ago (* 60 60 24 (+ daynr 1)))
+                       (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
+                       (this-month (format-time-string "%Y-%m-" (current-time)))
+                       (subtree-is-current (save-excursion
+                                             (forward-line 1)
+                                             (and (< (point) subtree-end)
+                                                  (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
+                  (if subtree-is-current
+                      subtree-end ; Has a date in this month or last month, skip it
+                    nil))  ; available to archive
+              (or subtree-end (point-max)))
+          next-headline))))
 
-;; Ripped from http://doc.norang.ca/org-mode.html#Archiving
-(defun bh/skip-non-archivable-tasks ()
-  "Skip trees that are not available for archiving."
-  (save-restriction
-    (widen)
-    ;; Consider only tasks with done todo headings as archivable candidates
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
-          (subtree-end (save-excursion (org-end-of-subtree t))))
-      (if (member (org-get-todo-state) org-todo-keywords-1)
-          (if (member (org-get-todo-state) org-done-keywords)
-              (let* ((daynr (string-to-number (format-time-string "%d" (current-time))))
-                     (a-month-ago (* 60 60 24 (+ daynr 1)))
-                     (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
-                     (this-month (format-time-string "%Y-%m-" (current-time)))
-                     (subtree-is-current (save-excursion
-                                           (forward-line 1)
-                                           (and (< (point) subtree-end)
-                                                (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
-                (if subtree-is-current
-                    subtree-end ; Has a date in this month or last month, skip it
-                  nil))  ; available to archive
-            (or subtree-end (point-max)))
-        next-headline))))
+  (setq org-agenda-custom-commands
+        '(("n" "Agenda and all TODOs"
+           ((agenda "")
+            (alltodo "")
+            (tags "-REFILE/"
+                  ((org-agenda-overriding-header "Tasks to Archive")
+                   (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+                   (org-tags-match-list-sublevels nil))))))))
 
-(setq org-agenda-custom-commands
-      '(("n" "Agenda and all TODOs"
-         ((agenda "")
-          (alltodo "")
-          (tags "-REFILE/"
-                ((org-agenda-overriding-header "Tasks to Archive")
-                 (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
-                 (org-tags-match-list-sublevels nil)))))))
-
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(global-unset-key (kbd "s-k"))
-(global-unset-key (kbd "C-z"))
-(global-unset-key (kbd "s-p"))
-(global-unset-key (kbd "C-x C-z"))
+(use-package org-velocity
+  :after org)
 
 ;; functions
 (defun jterk/concat-with-separator (sequence &optional separator)
@@ -176,151 +175,157 @@ SEQUENCE."
   (mapconcat 'identity sequence (or separator " ")))
 
 ;; mu4e comes from Homebrew
-(use-package mu4e)
-(use-package mu4e-contrib)
-(use-package org-mu4e)
-(use-package mu4e-extensions)
+(use-package mu4e
+  :config
+  (setq sendmail-program (concat my-home "bin/msmtpq"))
+  (setq message-sendmail-f-is-evil 't)
+  (setq message-sendmail-extra-arguments '("--read-envelope-from"))
 
-(setq sendmail-program (concat my-home "bin/msmtpq"))
-(setq message-sendmail-f-is-evil 't)
-(setq message-sendmail-extra-arguments '("--read-envelope-from"))
+  ;; mu4e settings
+  (setq mu4e-maildir "~/Maildir"
+        mu4e-attachment-dir  "~/Downloads"
+        send-mail-function 'sendmail-send-it
+        message-send-mail-function 'sendmail-send-it
+        mu4e-html2text-command 'mu4e-shr2text
+        mu4e-update-interval 300
+        mu4e-compose-keep-self-cc nil
+        mu4e-headers-skip-duplicates t
+        mu4e-headers-visible-lines 20
+        mu4e-compose-signature nil
+        mu4e-compose-signature-auto-include nil
+        mu4e-sent-messages-behavior 'delete
+        message-kill-buffer-on-exit t
+        mu4e-headers-sort-field :date
+        mu4e-headers-sort-direction :ascending)
 
-;; mu4e settings
-(setq mu4e-maildir "~/Maildir"
-      mu4e-attachment-dir  "~/Downloads"
-      send-mail-function 'sendmail-send-it
-      message-send-mail-function 'sendmail-send-it
-      mu4e-html2text-command 'mu4e-shr2text
-      mu4e-update-interval 300
-      mu4e-compose-keep-self-cc nil
-      mu4e-headers-skip-duplicates t
-      mu4e-headers-visible-lines 20
-      mu4e-compose-signature nil
-      mu4e-compose-signature-auto-include nil
-      mu4e-sent-messages-behavior 'delete
-      message-kill-buffer-on-exit t
-      org-mu4e-convert-to-html t
-      mu4e-headers-sort-field :date
-      mu4e-headers-sort-direction :ascending)
+  ;; Blacklist some problematic email address patterns. Note that mu4e needs to be
+  ;; restarted before changes here take effect.
+  (setq mu4e-compose-complete-ignore-address-regexp
+        (concat
+         ;; This will become '\(abc|xyz|zyx\)'
+         "\\("
+         (jterk/concat-with-separator
+          '(
+            ;; These become members of the "or" portion mentioned above.
+            "no-?reply"
+            "@docs.google.com"
+            "@resource.calendar.google.com"
+            "[a-z0-9]\\{9\\}@jobvite.com"
+            "yammer\\+re\\+.*@yammer.com"
+            "paper.*@dropbox.com"
+            )
+          "\\|")
+         "\\)"))
 
-;; For tramp
-(setq shell-file-name "/bin/bash")
-(setq tramp-auto-save-directory "~/tmp/tramp/")
+  (add-hook 'mu4e-headers-mode-hook 'mu4e-disable-trailing-whitespace-hook)
+  (add-hook 'mu4e-view-mode-hook 'mu4e-disable-trailing-whitespace-hook)
+  (add-hook 'mu4e-view-mode-hook 'mu4e-configure-wrapping)
 
-;; Blacklist some problematic email address patterns. Note that mu4e needs to be
-;; restarted before changes here take effect.
-(setq mu4e-compose-complete-ignore-address-regexp
-      (concat
-       ;; This will become '\(abc|xyz|zyx\)'
-       "\\("
-       (jterk/concat-with-separator
-        '(
-          ;; These become members of the "or" portion mentioned above.
-          "no-?reply"
-          "@docs.google.com"
-          "@resource.calendar.google.com"
-          "[a-z0-9]\\{9\\}@jobvite.com"
-          "yammer\\+re\\+.*@yammer.com"
-          "paper.*@dropbox.com"
-          )
-        "\\|")
-       "\\)"))
+  ;; soft wrap when composing
+  (add-hook 'mu4e-compose-mode-hook
+            (lambda ()
+              (flyspell-mode)
+              (auto-fill-mode -1)
+              (setq message-fill-column nil)
+              (visual-line-mode)))
 
-(add-hook 'mu4e-headers-mode-hook 'mu4e-disable-trailing-whitespace-hook)
-(add-hook 'mu4e-view-mode-hook 'mu4e-disable-trailing-whitespace-hook)
-(add-hook 'mu4e-view-mode-hook 'mu4e-configure-wrapping)
+  ;; Dynamically determine the right trash folder to use based on the message
+  ;; being trashed. TODO consider moving to mu4e-extensions
+  (setq mu4e-trash-folder
+        (lambda (message)
+          (mu4e-get-folder message 'mu4e-trash-folder)))
 
-;; soft wrap when composing
-(add-hook 'mu4e-compose-mode-hook
-          (lambda ()
-            (flyspell-mode)
-            (auto-fill-mode -1)
-            (setq message-fill-column nil)
-            (visual-line-mode)))
+  ;; ... and refiling. TODO consider moving to mu4e-extensions
+  (setq mu4e-refile-folder
+        (lambda (message)
+          (mu4e-get-folder message 'mu4e-refile-folder)))
 
-;; Dynamically determine the right trash folder to use based on the message
-;; being trashed. TODO consider moving to mu4e-extensions
-(setq mu4e-trash-folder
-      (lambda (message)
-        (mu4e-get-folder message 'mu4e-trash-folder)))
+  (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-;; ... and refiling. TODO consider moving to mu4e-extensions
-(setq mu4e-refile-folder
-      (lambda (message)
-        (mu4e-get-folder message 'mu4e-refile-folder)))
-
-(add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-
-(defun mu4e-headers-keybinding-hook ()
-  "Key binding hook for the mu4e headers view.
+  (defun mu4e-headers-keybinding-hook ()
+    "Key binding hook for the mu4e headers view.
 Performs the following modifications:
 
 * Binds 'o' to `mu4e-headers-view-message'
 
 TODO: Consider making a local copy of the key map."
-  (define-key mu4e-headers-mode-map (kbd "o") 'mu4e-headers-view-message))
+    (define-key mu4e-headers-mode-map (kbd "o") 'mu4e-headers-view-message))
 
-(add-hook 'mu4e-headers-mode-hook 'mu4e-headers-keybinding-hook)
+  (add-hook 'mu4e-headers-mode-hook 'mu4e-headers-keybinding-hook))
 
-;; Re-defined here since org -> HTML conversion is not customizable
-;;
-;; Patched according to http://www.brool.com/index.php/using-mu4e
-;;
-;; diff --git a/mu4e/org-mu4e.el b/mu4e/org-mu4e.el
-;; index 44d5ea1..6697486 100644
-;; --- a/mu4e/org-mu4e.el
-;; +++ b/mu4e/org-mu4e.el
-;; @@ -170,7 +170,9 @@ and images in a multipart/related part."
-;;             ;; because we probably don't want to export a huge style file
-;;             (org-export-htmlize-output-type 'inline-css)
-;;             ;; makes the replies with ">"s look nicer
-;; -           (org-export-preserve-breaks t)
-;; +           (org-export-preserve-breaks nil)
-;; +            ;; turn off table of contents
-;; +            (org-export-with-toc nil)
-;;             ;; dvipng for inline latex because MathJax doesn't work in mail
-;;             (org-export-with-LaTeX-fragments 'dvipng)
-;;             ;; to hold attachments for inline html images
-;;
-;; TODO: add customization; create pull request
-(use-package org-mu4e)
-(defun org~mu4e-mime-convert-to-html ()
-  "Convert the current body to html."
-  (unless (fboundp 'org-export-string-as)
-    (mu4e-error "Require function 'org-export-string-as not found"))
-  (unless (executable-find "dvipng")
-    (mu4e-error "Required program dvipng not found"))
-  (let* ((begin
-	     (save-excursion
-	       (goto-char (point-min))
-	       (search-forward mail-header-separator)))
-	    (end (point-max))
-	    (raw-body (buffer-substring begin end))
-	    (tmp-file (make-temp-name (expand-file-name "mail"
-					temporary-file-directory)))
-	    ;; because we probably don't want to skip part of our mail
-	    (org-export-skip-text-before-1st-heading nil)
-	    ;; because we probably don't want to export a huge style file
-	    (org-export-htmlize-output-type 'inline-css)
-	    ;; makes the replies with ">"s look nicer
-	    (org-export-preserve-breaks nil)
-      ;; turn off table of contents
-      (org-export-with-toc nil)
-	    ;; dvipng for inline latex because MathJax doesn't work in mail
-	    (org-export-with-LaTeX-fragments 'dvipng)
-	    ;; to hold attachments for inline html images
-	    (html-and-images
-	      (org~mu4e-mime-replace-images
-                (org-export-string-as raw-body 'html t)
-		tmp-file))
-	    (html-images (cdr html-and-images))
-	    (html (car html-and-images)))
+(use-package mu4e-contrib
+  :after mu4e)
+
+(use-package org-mu4e
+  :after mu4e
+  :config
+  (setq org-mu4e-convert-to-html t)
+
+  ;; Re-defined here since org -> HTML conversion is not customizable
+  ;;
+  ;; Patched according to http://www.brool.com/index.php/using-mu4e
+  ;;
+  ;; diff --git a/mu4e/org-mu4e.el b/mu4e/org-mu4e.el
+  ;; index 44d5ea1..6697486 100644
+  ;; --- a/mu4e/org-mu4e.el
+  ;; +++ b/mu4e/org-mu4e.el
+  ;; @@ -170,7 +170,9 @@ and images in a multipart/related part."
+  ;;             ;; because we probably don't want to export a huge style file
+  ;;             (org-export-htmlize-output-type 'inline-css)
+  ;;             ;; makes the replies with ">"s look nicer
+  ;; -           (org-export-preserve-breaks t)
+  ;; +           (org-export-preserve-breaks nil)
+  ;; +            ;; turn off table of contents
+  ;; +            (org-export-with-toc nil)
+  ;;             ;; dvipng for inline latex because MathJax doesn't work in mail
+  ;;             (org-export-with-LaTeX-fragments 'dvipng)
+  ;;             ;; to hold attachments for inline html images
+  ;;
+  ;; TODO: add customization; create pull request
+  (defun org~mu4e-mime-convert-to-html ()
+    "Convert the current body to html."
+    (unless (fboundp 'org-export-string-as)
+      (mu4e-error "Require function 'org-export-string-as not found"))
+    (unless (executable-find "dvipng")
+      (mu4e-error "Required program dvipng not found"))
+    (let* ((begin
+            (save-excursion
+              (goto-char (point-min))
+              (search-forward mail-header-separator)))
+           (end (point-max))
+           (raw-body (buffer-substring begin end))
+           (tmp-file (make-temp-name (expand-file-name "mail"
+                                                       temporary-file-directory)))
+           ;; because we probably don't want to skip part of our mail
+           (org-export-skip-text-before-1st-heading nil)
+           ;; because we probably don't want to export a huge style file
+           (org-export-htmlize-output-type 'inline-css)
+           ;; makes the replies with ">"s look nicer
+           (org-export-preserve-breaks nil)
+           ;; turn off table of contents
+           (org-export-with-toc nil)
+           ;; dvipng for inline latex because MathJax doesn't work in mail
+           (org-export-with-LaTeX-fragments 'dvipng)
+           ;; to hold attachments for inline html images
+           (html-and-images
+            (org~mu4e-mime-replace-images
+             (org-export-string-as raw-body 'html t)
+             tmp-file))
+           (html-images (cdr html-and-images))
+           (html (car html-and-images)))
       (delete-region begin end)
       (save-excursion
-	(goto-char begin)
-	(newline)
-	(insert (org~mu4e-mime-multipart
-		  raw-body html (mapconcat 'identity html-images "\n"))))))
+        (goto-char begin)
+        (newline)
+        (insert (org~mu4e-mime-multipart
+                 raw-body html (mapconcat 'identity html-images "\n")))))))
+
+(use-package mu4e-extensions
+  :after mu4e)
+
+;; For tramp
+(setq shell-file-name "/bin/bash")
+(setq tramp-auto-save-directory "~/tmp/tramp/")
 
 ;; Colors
 (use-package solarized-theme
@@ -360,6 +365,11 @@ TODO: Consider making a local copy of the key map."
 
 ;; Don't show the font menu.
 (global-unset-key (kbd "s-t"))
+
+(global-unset-key (kbd "s-k"))
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "s-p"))
+(global-unset-key (kbd "C-x C-z"))
 
 ;; Key Bindings
 (global-set-key "\C-x\C-m" 'execute-extended-command)
@@ -633,8 +643,7 @@ TODO: Add an (optional) type"
  'org-mode-hook
  (lambda ()
    (flyspell-mode)
-   (define-key org-mode-map (kbd "C-c s") 'jterk/org-insert-src-block)
-   (define-key org-mode-map (kbd "C-c t") 'jterk/org-yank-sql-table)))
+   (define-key org-mode-map (kbd "C-c s") 'jterk/org-insert-src-block)))
 
 (use-package org-table)
 (defun jterk/org-table-copy-right (n)
@@ -853,7 +862,13 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package plantuml-mode
   :ensure t
   :config
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2017.16/libexec/plantuml.jar"))
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2017.16/libexec/plantuml.jar")
+  (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode)))
+
+(use-package flycheck-plantuml
+  :ensure t
+  :config
+  (flycheck-plantuml-setup))
 
 (use-package bazel-mode
   :ensure t)
