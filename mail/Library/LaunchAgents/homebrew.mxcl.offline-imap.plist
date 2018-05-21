@@ -14,5 +14,15 @@
     <integer>30</integer>
     <key>RunAtLoad</key>
     <true/>
+    <key>EnvironmentVariables</key>
+    <dict>
+      <!-- python2 is in /usr/local/bin -->
+      <key>PATH</key>
+      <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin</string>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/jterk/tmp/mailrun.stdout</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/jterk/tmp/mailrun.stderr</string>
   </dict>
 </plist>
