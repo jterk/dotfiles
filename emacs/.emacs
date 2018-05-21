@@ -53,6 +53,8 @@
   :ensure t
   :config
   (add-to-list `exec-path-from-shell-variables "GOPATH")
+  (add-to-list `exec-path-from-shell-variables "VIRTUALENVWRAPPER_PYTHON")
+  (add-to-list `exec-path-from-shell-variables "PROJECT_HOME")
   (exec-path-from-shell-initialize))
 
 (setenv "LC_ALL" "en_US.UTF-8")
