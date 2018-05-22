@@ -840,7 +840,14 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   :after go-mode)
 
 (use-package protobuf-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'protobuf-mode-hook
+            (lambda ()
+              (c-add-style "my-protobuf-style"
+                           '((c-basic-offset . 4)
+                             (indent-tabs-mode . nil)))
+              (c-set-style "my-protobuf-style"))))
 
 (use-package typescript-mode
   :ensure t)
