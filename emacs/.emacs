@@ -828,15 +828,16 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package go-mode
   :ensure t
   :config
-  (use-package go-autocomplete
-    :ensure t))
-
-(add-hook 'go-mode-hook
+  (add-hook 'go-mode-hook
           (lambda ()
                   (add-hook 'before-save-hook 'gofmt-before-save)
                   (local-set-key (kbd "M-.") 'godef-jump)
                   (local-set-key (kbd "M-*") 'pop-tag-mark)
-                  (auto-complete-mode 1)))
+                  (auto-complete-mode 1))))
+
+(use-package go-autocomplete
+  :ensure t
+  :after go-mode)
 
 (use-package protobuf-mode
   :ensure t)
