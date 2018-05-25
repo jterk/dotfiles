@@ -167,6 +167,15 @@
 (use-package org-velocity
   :after org)
 
+(use-package org-journal
+  :ensure t
+  :after org
+  :config
+  (setq org-journal-dir (concat (if (boundp 'jterk/dropbox-dropbox)
+                                    jterk/dropbox-dropbox
+                                  jterk/dropbox)
+                                "/org/journal")))
+
 ;; functions
 (defun jterk/concat-with-separator (sequence &optional separator)
   "Concatenate all of the elements of SEQUENCE as strings.
