@@ -823,8 +823,6 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
         (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist)))
         (setq yas-snippet-dirs (append yas-snippet-dirs `(,(concat db-emacs "/snippets")))))))
 
-(setq yas-snippet-dirs '("/Users/jterk/.emacs.d/snippets" "/Users/jterk/.emacs.d/elpa/elpy-20180520.1401/snippets/"))
-
 (use-package go-mode
   :ensure t
   :config
