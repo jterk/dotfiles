@@ -694,9 +694,16 @@ functionality."
   :mode "\\.ejs\\'")
 
 (use-package htmlize :ensure t)
-(use-package markdown-mode :ensure t)
 (use-package ess :ensure t)
 (use-package slime :ensure t)
+
+(use-package markdown-mode
+  :ensure t
+  :config
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (flyspell-mode))))
+
 
 ;; Make scratch buffers for different modes
 (mapc (lambda (mode)
