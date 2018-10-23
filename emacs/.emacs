@@ -826,18 +826,6 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package coffee-mode
   :ensure t)
 
-;; Stuff for work
-(let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
-  (if (file-exists-p db-emacs)
-      (progn
-        (add-to-list 'load-path db-emacs)
-        (require 'db)
-        (require 'stone-mode)
-        (require 'pyxl-mode)
-        (require 'jterk-mu4e)
-        (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist)))
-        (setq yas-snippet-dirs (append yas-snippet-dirs `(,(concat db-emacs "/snippets")))))))
-
 (use-package go-mode
   :ensure t
   :config
@@ -896,6 +884,18 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 
 (use-package bazel-mode
   :ensure t)
+
+;; Stuff for work. Do all of this last so that it can override anything set above.
+(let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
+  (if (file-exists-p db-emacs)
+      (progn
+        (add-to-list 'load-path db-emacs)
+        (require 'db)
+        (require 'stone-mode)
+        (require 'pyxl-mode)
+        (require 'jterk-mu4e)
+        (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist)))
+        (setq yas-snippet-dirs (append yas-snippet-dirs `(,(concat db-emacs "/snippets")))))))
 
 ;; Mitigate Bug#28350 (security) in Emacs 25.2 and earlier.
 ;; TODO remove once this is resolved
