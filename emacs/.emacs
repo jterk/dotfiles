@@ -122,8 +122,6 @@
                  "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
                 ("n" "note" entry (file jterk/org-refile-target)
                  "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
-                 "* %?\n%U\n" :clock-in t :clock-resume t)
                 ("m" "Meeting" entry (file jterk/org-refile-target)
                  "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
                 ("p" "Phone call" entry (file jterk/org-refile-target)
@@ -171,10 +169,8 @@
   :ensure t
   :after org
   :config
-  (setq org-journal-dir (concat (if (boundp 'jterk/dropbox-dropbox)
-                                    jterk/dropbox-dropbox
-                                  jterk/dropbox)
-                                "/org/journal")))
+  (setq org-journal-dir (concat jterk/dropbox "/org/journal"))
+  (setq org-journal-date-format "%A %F"))
 
 ;; functions
 (defun jterk/concat-with-separator (sequence &optional separator)
