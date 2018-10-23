@@ -578,11 +578,14 @@ Otherwise returns 't.  This is intended to be used as:
 (use-package magit
   :ensure t
   :config
-  (setq magit-repository-directories (list (concat my-home "dev")))
-  (setq magit-fetch-arguments '("--prune")))
+  (setq magit-repository-directories `((,(concat my-home "src") . 1)))
+  (setq magit-fetch-arguments '("--prune"))
+  (set-variable 'magit-auto-revert-mode nil)
+  (set-variable 'global-auto-revert-mode t))
 
 ;; Use `magit-blame' instead of `vc-annotate'
 (global-set-key "\C-xvg" 'magit-blame)
+
 
 (defun trim-string-list (list)
   "Remove empty and non-string elements from LIST.
