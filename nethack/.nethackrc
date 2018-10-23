@@ -1,4 +1,4 @@
-OPTIONS=dumpfile:/Users/jterk/tmp/%n.txt
+# OPTIONS=dumpfile:/Users/jterk/tmp/%n.txt
 OPTIONS=autodig
 OPTIONS=noautopickup
 OPTIONS=autoquiver
@@ -16,21 +16,21 @@ OPTIONS=lit_corridor
 OPTIONS=nolootabc
 OPTIONS=mail
 OPTIONS=null
-OPTIONS=paranoid_hit
-OPTIONS=paranoid_quit
-OPTIONS=paranoid_remove
+# OPTIONS=paranoid_hit
+# OPTIONS=paranoid_quit
+# OPTIONS=paranoid_remove
 OPTIONS=prayconfirm
 OPTIONS=pushweapon
 OPTIONS=!rest_on_space
 OPTIONS=safe_pet
-OPTIONS=noshowborn
-OPTIONS=noshowbuc
+# OPTIONS=noshowborn
+# OPTIONS=noshowbuc
 OPTIONS=showexp
 OPTIONS=noshowrace
 OPTIONS=showscore
 OPTIONS=silent
 OPTIONS=sortpack
-OPTIONS=sound
+# OPTIONS=sound
 OPTIONS=sparkle
 OPTIONS=nostandout
 OPTIONS=time
@@ -43,7 +43,7 @@ OPTIONS=dogname:Spike
 OPTIONS=horsename:Cloppy
 OPTIONS=msghistory:20
 OPTIONS=boulder:0
-OPTIONS=disclose:+i +a +v +g +c 
+OPTIONS=disclose:+i +a +v +g +c
 OPTIONS=fruit:pear
 OPTIONS=menustyle:full
 OPTIONS=menu_headings:inverse
@@ -68,7 +68,9 @@ MENUCOLOR=" !C"=white
 MENUCOLOR=" !B"=white
 MENUCOLOR=" !UC"=white
 MENUCOLOR=" uncursed| UC?($| )"=white
-MENUCOLOR=" \([-0-9]+:[-0-9]+\)"=white #nethack doesn't display "uncursed" if charges are known
+
+#nethack doesn't display "uncursed" if charges are known
+MENUCOLOR=" \([-0-9]+:[-0-9]+\)"=white
 MENUCOLOR=" [+-][0-9]"=white
 
 MENUCOLOR=" blessed| B($| )"=cyan
@@ -94,10 +96,18 @@ MENUCOLOR=" potions? called water named (unholy|cursed|C)($| )"=orange
 # vegan
 MENUCOLOR="(food |cram |K-|C-)ration|gunyoki"=green&bold
 MENUCOLOR="lembas wafer|melon|carrot|tin .* spinach"=green&bold
-MENUCOLOR=" oranges?( named.*)?$"=green&bold # avoid coloring orange DSM
-MENUCOLOR=" pears?( named.*)?$"=green&bold # avoid coloring pearl rings
+
+# avoid coloring orange DSM
+MENUCOLOR=" oranges?( named.*)?$"=green&bold
+
+# avoid coloring pearl rings
+MENUCOLOR=" pears?( named.*)?$"=green&bold
+
 MENUCOLOR=" apple|banana|kelp|eucalyptus|garlic|wolfsbane"=green&bold
-MENUCOLOR=" slime mold| brain"=green&bold  ## YOUR FRUIT HERE
+
+## YOUR FRUIT HERE
+MENUCOLOR=" slime mold| brain"=green&bold
+
 MENUCOLOR="(tin of )?(gelatinous cube|acid blob|quivering blob)( corpse)?"=green&bold
 MENUCOLOR="(tin of )?(blue|spotted|ochre) jelly( corpse)?"=green&bold
 MENUCOLOR="(tin of )?lichen|shrieker|violet fungus|(brown|yellow|green|red) mold( corpse)?"=green&bold
@@ -114,7 +124,10 @@ MENUCOLOR=" luck(stone)?($| )"=magenta
 MENUCOLOR=" wand .* wish(ing)?($| )"= magenta
 MENUCOLOR=" magic marker"=magenta
 MENUCOLOR=" magic lamp|lamp .* magic"=magenta
-MENUCOLOR=" unicorn horn[^[]*$"=magenta #this doesn't color the #enhance unicorn horn skill
+
+#this doesn't color the #enhance unicorn horn skill
+MENUCOLOR=" unicorn horn[^[]*$"=magenta
+
 MENUCOLOR=" tinning kit"=magenta
 MENUCOLOR=" ring .* regen(eration)?($| )"=magenta
 MENUCOLOR=" ring .* conflict"=magenta
@@ -211,10 +224,14 @@ MENUCOLOR="[a-zA-Z] - [a-zA-Z ]+ [0-9]\*   [a-z]+ +[0-9]+%"=magenta
 ############
 # #ENHANCE # thanks itsblah
 ############
-MENUCOLOR="^ +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=none           # normal
-MENUCOLOR="^ *[a-z] - +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=white # ready to enhance
-MENUCOLOR="^ +\* +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=white      # enhanceable if more skill slots
-MENUCOLOR="^ +# +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=none        # enhanceable if more potential
+# normal
+MENUCOLOR="^ +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=none
+# ready to enhance
+MENUCOLOR="^ *[a-z] - +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=white
+# enhanceable if more skill slots
+MENUCOLOR="^ +\* +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=white
+# enhanceable if more potential
+MENUCOLOR="^ +# +[a-z -]+ +\[(Unskilled|Basic|Skilled|Expert|Master|Grand Master)\]$"=none
 
 ################
 # FORCE COLORS #
