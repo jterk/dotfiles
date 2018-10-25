@@ -874,7 +874,7 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package plantuml-mode
   :ensure t
   :config
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2017.16/libexec/plantuml.jar")
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2018.11/libexec/plantuml.jar")
   (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode)))
 
 (use-package flycheck-plantuml
