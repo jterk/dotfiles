@@ -329,7 +329,7 @@ TODO: Consider making a local copy of the key map."
   :after mu4e)
 
 ;; For tramp
-(setq shell-file-name "/bin/bash")
+(setq shel-lfile-name "/bin/bash")
 (setq tramp-auto-save-directory "~/tmp/tramp/")
 
 ;; Colors
@@ -339,12 +339,14 @@ TODO: Consider making a local copy of the key map."
 
 ;; Font
 (defvar jterk/frame-font "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
-(set-frame-font jterk/frame-font)
+(if (x-list-fonts jterk/frame-font)
+    (progn
+      (set-frame-font jterk/frame-font)
+      (add-to-list 'default-frame-alist `(font . ,jterk/frame-font))))
 
 ;; Frame size
 (add-to-list 'default-frame-alist '(height . 65))
 (add-to-list 'default-frame-alist '(width . 202))
-(add-to-list 'default-frame-alist `(font . ,jterk/frame-font))
 
 ;; Syntax Highlighting
 (use-package font-lock
