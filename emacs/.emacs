@@ -328,15 +328,10 @@ TODO: Consider making a local copy of the key map."
 (use-package mu4e-extensions
   :after mu4e)
 
-
 ;; For tramp
 (setq tramp-auto-save-directory "~/tmp/tramp/")
-(setq jterk/cmdproxy-path (concat exec-directory "cmdproxy.exe"))
 (if (file-exists-p "/bin/bash")
-    (setq shell-file-name "/bin/bash")
-  (if (file-exists-p jterk/cmdproxy-path)
-      (setq shell-file-name jterk/cmdproxy-path)))
-
+    (setq shell-file-name "/bin/bash"))
 ;; Colors
 (use-package solarized-theme
   :ensure t
