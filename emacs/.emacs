@@ -885,7 +885,9 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (flycheck-plantuml-setup))
 
 (use-package bazel-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\BUILD.in\\'" . bazel-mode)))
 
 ;; Detect aspell on Windows
 ;; TODO use PATH instead of explicit exe. locations
