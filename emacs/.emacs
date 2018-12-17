@@ -893,6 +893,13 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (if (file-exists-p win-aspell)
     (setq ispell-program-name win-aspell))
 
+(use-package ag
+  :ensure t
+  :config
+  (setq win-ag "C:/tools/msys64/mingw64/bin/ag.exe")
+  (if (file-exists-p win-ag)
+      (setq ag-executable win-ag)))
+
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
   (if (file-exists-p db-emacs)
