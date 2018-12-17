@@ -909,7 +909,8 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
         (require 'stone-mode)
         (require 'pyxl-mode)
         (require 'jterk-mu4e)
-        (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist)))
+        (if (fboundp 'mu4e-apply-account-vars)
+            (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist))))
         (setq yas-snippet-dirs (append yas-snippet-dirs `(,(concat db-emacs "/snippets")))))))
 
 ;; Mitigate Bug#28350 (security) in Emacs 25.2 and earlier.
