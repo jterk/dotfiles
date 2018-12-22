@@ -396,7 +396,7 @@ TODO: Consider making a local copy of the key map."
 (setq wisent-log-file "~/tmp/wisent.output")
 
 ;; Browser
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+(setq browse-url-browser-function 'browse-url-default-browser)
 
 ;; No line truncation!
 (set-default 'truncate-lines t)
