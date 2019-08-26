@@ -169,8 +169,9 @@
   :ensure t
   :after org
   :config
-  (setq org-journal-dir (concat jterk/dropbox "/org/journal"))
-  (setq org-journal-date-format "%A %F"))
+  (custom-set-variables
+   '(org-journal-dir (concat jterk/dropbox "/org/journal"))
+   '(org-journal-date-format "%A %F")))
 
 ;; functions
 (defun jterk/concat-with-separator (sequence &optional separator)
