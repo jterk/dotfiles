@@ -915,11 +915,5 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
             (mu4e-apply-account-vars (cdr (assoc mu4e-default-account mu4e-account-alist))))
         (setq yas-snippet-dirs (append yas-snippet-dirs `(,(concat db-emacs "/snippets")))))))
 
-;; Mitigate Bug#28350 (security) in Emacs 25.2 and earlier.
-;; TODO remove once this is resolved
-(eval-after-load "enriched"
-  '(defun enriched-decode-display-prop (start end &optional param)
-     (list start end)))
-
 (provide '.emacs)
 ;;; .emacs ends here
