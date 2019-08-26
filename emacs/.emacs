@@ -586,9 +586,8 @@ Otherwise returns 't.  This is intended to be used as:
   (set-variable 'magit-auto-revert-mode nil)
   (set-variable 'global-auto-revert-mode t))
 
-;; Use `magit-blame' instead of `vc-annotate'
-(global-set-key "\C-xvg" 'magit-blame)
-
+;; Use `magit-blame-addition' instead of `vc-annotate'
+(global-set-key "\C-xvg" 'magit-blame-addition)
 
 (defun trim-string-list (list)
   "Remove empty and non-string elements from LIST.
