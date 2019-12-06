@@ -345,7 +345,7 @@ TODO: Consider making a local copy of the key map."
 ;; Colors
 (use-package solarized-theme
   :ensure t
-  :config (load-theme 'solarized-light t))
+  :config (load-theme 'solarized-dark t))
 
 ;; Font
 (defvar jterk/frame-font "-apple-Menlo-medium-normal-normal-*-11-*-*-*-m-0-iso10646-1")
