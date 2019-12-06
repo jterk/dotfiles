@@ -911,6 +911,11 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (if (file-exists-p win-ag)
       (setq ag-executable win-ag)))
 
+(use-package emojify
+  :ensure t
+  :config
+  (global-emojify-mode))
+
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
   (if (file-exists-p db-emacs)
