@@ -193,7 +193,11 @@ SEQUENCE."
         send-mail-function 'sendmail-send-it
         message-send-mail-function 'sendmail-send-it
         mu4e-html2text-command 'mu4e-shr2text
-        mu4e-update-interval 300
+
+        ;; Use `jterk/mu4e-update-timer-fn'
+        mu4e-update-interval nil
+        jterk/mu4e-update-interval 300
+
         mu4e-compose-keep-self-cc nil
         mu4e-headers-skip-duplicates t
         mu4e-headers-visible-lines 20

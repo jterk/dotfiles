@@ -147,5 +147,52 @@ email."
   (cancel-timer jterk/async-smtpmail-send-it-timer)
   (setq jterk/async-smtpmail-send-it-timer nil))
 
+(defvar jterk/mu4e-update-interval nil
+  "See `mu4e-update-interval'.")
+
+(defvar jterk/mu4e-last-update-time nil
+  "The time that `jterk/mu4e-update-timer-fn' last executed.")
+
+(defvar jterk/mu4e-update-timer nil
+  "The timer for `jterk/mu4e-update-timer-fn', if scheduled.")
+
+(defun jterk/mu4e-update-timer-fn ()
+  "Periodically invokes `mu4e-update-mail-and-index'.
+
+This function tracks its last execution time (in
+`jterk/mu4e-last-update-time') to ensure that it runs at most
+once per every `mu4-update-interval'."
+  (if (>= (- (float-time) (or jterk/mu4e-last-update-time 0)) jterk/mu4e-update-interval)
+      (progn
+        (setq jterk/mu4e-last-update-time (float-time))
+        (mu4e-update-mail-and-index mu4e-index-update-in-background))))
+
+(defun jterk/mu4e-wrapper (orig-fn &rest args)
+  "Advice intended for use with `mu4e'.
+
+Inhibits mu4e's background updates in favor of
+`jterk/mu4e-update-timer-fn'."
+    (apply orig-fn args)
+    (if (and jterk/mu4e-update-interval (null jterk/mu4e-update-timer))
+        (setq jterk/mu4e-update-timer
+              (run-at-time 0 jterk/mu4e-update-interval 'jterk/mu4e-update-timer-fn))))
+
+(defun jterk/mu4e-quit-wrapper ()
+  "Advice intended for use with `mue4-quit'
+
+Cancels `jterk/mu4e-update-timer-fn', if scheduled."
+  (when jterk/mu4e-update-timer
+    (cancel-timer jterk/mu4e-update-timer)
+    (setq jterk/mu4e-update-timer nil)))
+
+(defun jterk/mu4e-install-advice ()
+  "Activates mu4e advice.
+
+Installs `jterk/mu4e-wrapper' and `jterk/mu4e-quit-wrapper'."
+  (advice-add 'mu4e :around #'jterk/mu4e-wrapper)
+  (advice-add 'mu4e-quit :after-while #'jterk/mu4e-quit-wrapper))
+
+(jterk/mu4e-install-advice)
+
 (provide 'mu4e-extensions)
 ;;; mu4e-extensions.el ends here
