@@ -53,6 +53,7 @@
 
 ;; Configure PATH related vars from
 (use-package exec-path-from-shell
+  :if (not (eq system-type 'windows-nt))
   :ensure t
   :config
   (add-to-list `exec-path-from-shell-variables "GOPATH")
