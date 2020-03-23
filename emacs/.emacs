@@ -901,7 +901,7 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 
 ;; Detect aspell on Windows
 ;; TODO use PATH instead of explicit exe. locations
-(setq win-aspell "C:/tools/msys64/mingw64/bin/aspell.exe")
+(setq win-aspell "C:/msys64/mingw64/bin/aspell.exe")
 (if (file-exists-p win-aspell)
     (setq ispell-program-name win-aspell))
 
