@@ -704,10 +704,43 @@ functionality."
       (org-table-align))))
 
 ;; If there's a non-org-scratch buffer, replace it with ~/tmp/*scratch*
-(let ((scratch-buffer (get-buffer "*scratch*")))
-  (if scratch-buffer
-      (kill-buffer scratch-buffer)))
-(find-file-noselect (concat my-home "tmp/*scratch*"))
+(defvar jterk/tmp-dir (concat my-home "tmp/"))
+
+(defun jterk/scratch-buffer-filename (buffer-name)
+  "Get the backing file name for BUFFER-NAME.
+
+Returns the concatenation of `jterk/tmp-dir' and the result of
+applying `convert-standard-filename' to BUFFER-NAME."
+  (expand-file-name
+   (concat jterk/tmp-dir (convert-standard-filename buffer-name))))
+
+(defun jterk/create-scratch-buffer (mode &optional buffer-name)
+  "Create a scratch buffer for MODE (optionally with the name BUFFER-NAME).
+
+If BUFFER-NAME is omitted, *MODE-scratch* will be used.  The
+created buffer will visit the file indicated by passing
+BUFFER-NAME (or the constructed buffer name) to
+`jterk/scratch-buffer-filename'.
+
+If a buffer with the desired name already exists and is visiting
+a file, it is left alone.  If a buffer with the desired name
+already exists but is not visiting a file, it is replaced by a
+new buffer visiting the appropriate file as described above.
+
+If a buffer is created it will use the major mode MODE."
+  (let* ((buffer-name
+          (or buffer-name
+              (concat "*" (symbol-name mode) "-scratch*")))
+         (buffer (get-buffer buffer-name)))
+    (if (not (and buffer (buffer-file-name buffer)))
+        (save-window-excursion
+          (if buffer (kill-buffer buffer))
+          (find-file (jterk/scratch-buffer-filename buffer-name))
+          (rename-buffer buffer-name)
+          (funcall mode)))))
+
+(jterk/create-scratch-buffer 'emacs-lisp-mode "*scratch*")
+(jterk/create-scratch-buffer 'org-mode)
 
 (use-package web-mode
   :ensure t
@@ -720,18 +753,10 @@ functionality."
 (use-package markdown-mode
   :ensure t
   :config
+  (jterk/create-scratch-buffer 'markdown-mode)
   (add-hook 'markdown-mode-hook
             (lambda ()
               (flyspell-mode))))
-
-
-;; Make scratch buffers for different modes
-(mapc (lambda (mode)
-        (let* ((buffer-name (concat "*" (symbol-name mode) "-scratch*"))
-               (buffer (find-file-noselect (concat my-home "tmp/" buffer-name))))
-          (with-current-buffer buffer
-            (funcall mode))))
-      (list 'org-mode 'markdown-mode))
 
 (setq inferior-lisp-program "sbcl")
 (setq nginx-indent-level 2)
