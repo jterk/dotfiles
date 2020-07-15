@@ -53,7 +53,7 @@
 
 ;; Configure PATH related vars from
 (use-package exec-path-from-shell
-  :if (not (eq system-type 'windows-nt))
+  :unless (eq system-type 'windows-nt)
   :ensure t
   :config
   (add-to-list `exec-path-from-shell-variables "GOPATH")
@@ -186,6 +186,7 @@ SEQUENCE."
 
 ;; mu4e comes from Homebrew
 (use-package mu4e
+  :unless (eq system-type 'windows-nt)
   :config
   (setq sendmail-program (concat my-home "bin/msmtpq"))
   (setq message-sendmail-f-is-evil 't)
