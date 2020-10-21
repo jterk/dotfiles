@@ -119,18 +119,18 @@
 
   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
   (setq org-capture-templates
-        (quote (("t" "todo" entry (file jterk/org-refile-target)
-                 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("r" "respond" entry (file jterk/org-refile-target)
-                 "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-                ("n" "note" entry (file jterk/org-refile-target)
-                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("m" "Meeting" entry (file jterk/org-refile-target)
-                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-                ("p" "Phone call" entry (file jterk/org-refile-target)
-                 "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-                ("h" "Habit" entry (file jterk/org-refile-target)
-                 "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+        `(("t" "todo" entry (file jterk/org-refile-target)
+           "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+          ("r" "respond" entry (file jterk/org-refile-target)
+           "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+          ("n" "note" entry (file jterk/org-refile-target)
+           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+          ("m" "Meeting" entry (file jterk/org-refile-target)
+           "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+          ("p" "Phone call" entry (file jterk/org-refile-target)
+           "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+          ("h" "Habit" entry (file jterk/org-refile-target)
+           "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
   ;; Ripped from http://doc.norang.ca/org-mode.html#Archiving
   (defun bh/skip-non-archivable-tasks ()
