@@ -41,13 +41,13 @@
 (add-to-list 'load-path (concat my-home "emacs"))
 (add-to-list 'load-path (concat my-home "emacs-private"))
 
-(defvar jterk/dropbox)
+(defvar jterk/syncdir)
 
 (defun jterk/dir-or-nil (dir)
   "Return DIR if DIR exists and is a directory."
   (if (file-directory-p dir) dir nil))
 
-(setq jterk/dropbox
+(setq jterk/syncdir
       (or (jterk/dir-or-nil (concat my-home "Dropbox (Personal)"))
           (jterk/dir-or-nil (concat my-home "Dropbox"))))
 
@@ -80,9 +80,9 @@
          ("C-c b" . org-iswitchb))
   :config
   (defvar jterk/org-refile-target)
-  (setq jterk/org-refile-target (concat jterk/dropbox "/org/refile.org"))
+  (setq jterk/org-refile-target (concat jterk/syncdir "/org/refile.org"))
 
-  (setq org-agenda-files (list (concat jterk/dropbox "/org")))
+  (setq org-agenda-files (list (concat jterk/syncdir "/org")))
   (setq org-default-notes-file jterk/org-refile-target)
   (setq org-log-done t)
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
@@ -103,9 +103,9 @@
 
   (defvar org-mobile-inbox-for-pull)
   (defvar org-mobile-directory)
-  (setq org-directory (concat jterk/dropbox "/org"))
-  (setq org-mobile-inbox-for-pull (concat jterk/dropbox "/org/mobile-inbox.org"))
-  (setq org-mobile-directory (concat jterk/dropbox "/Apps/MobileOrg"))
+  (setq org-directory (concat jterk/syncdir "/org"))
+  (setq org-mobile-inbox-for-pull (concat jterk/syncdir "/org/mobile-inbox.org"))
+  (setq org-mobile-directory (concat jterk/syncdir "/Apps/MobileOrg"))
 
   ;; Don't convert to super/subscript unless an explicit '{' and '}' pair is present
   (setq org-use-sub-superscripts '{})
@@ -173,7 +173,7 @@
   :after org
   :config
   (custom-set-variables
-   '(org-journal-dir (concat jterk/dropbox "/org/journal"))
+   '(org-journal-dir (concat jterk/syncdir "/org/journal"))
    '(org-journal-date-format "%A %F")))
 
 ;; functions
