@@ -8,6 +8,10 @@
 ;; Remove startup wait time.
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
+;; Use more RAM etc, particularly for LSP mode
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
 ;; Don't show the startup message.
 (setq inhibit-startup-message t
       inhibit-startup-echo-area-message "jterk"
@@ -23,7 +27,6 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-(package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -85,7 +88,7 @@
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
   (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
   (setq org-todo-keyword-faces
@@ -568,8 +571,9 @@ Otherwise returns 't.  This is intended to be used as:
 (put 'upcase-region 'disabled nil)
 
 (use-package company
-  :ensure t)
-(global-company-mode t)
+  :ensure t
+  :config
+  (global-company-mode t))
 
 ;; The Silver Searcher
 (use-package ag
@@ -843,17 +847,7 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 
 (use-package go-mode
   :ensure t
-  :config
-  (add-hook 'go-mode-hook
-          (lambda ()
-                  (add-hook 'before-save-hook 'gofmt-before-save)
-                  (local-set-key (kbd "M-.") 'godef-jump)
-                  (local-set-key (kbd "M-*") 'pop-tag-mark)
-                  (auto-complete-mode 1))))
-
-(use-package go-autocomplete
-  :ensure t
-  :after go-mode)
+  )
 
 (use-package protobuf-mode
   :ensure t
@@ -889,7 +883,9 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package plantuml-mode
   :ensure t
   :config
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2018.11/libexec/plantuml.jar")
+  (setq plantuml-default-exec-mode 'executable)
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2020.2/libexec/plantuml.jar")
+  (setq plantuml-output-type "png")
   (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode)))
 
 (use-package flycheck-plantuml
@@ -915,10 +911,17 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (if (file-exists-p win-ag)
       (setq ag-executable win-ag)))
 
-(use-package emojify
+(use-package lsp-mode
   :ensure t
+  :commands lsp
+  :hook
+  (go-mode . lsp)
+  (go-mode . (lambda ()
+               (add-hook 'before-save-hook #'lsp-format-buffer t t)
+               (add-hook 'before-save-hook #'lsp-organize-imports t t)))
   :config
-  (global-emojify-mode))
+  (use-package lsp-ui
+    :ensure t))
 
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
