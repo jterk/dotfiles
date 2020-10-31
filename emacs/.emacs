@@ -964,8 +964,6 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package elfeed
   :ensure t)
 
-(use-package blog-publish)
-
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
   (if (file-exists-p db-emacs)
