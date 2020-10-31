@@ -8,6 +8,10 @@
 ;; Remove startup wait time.
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
+;; Use more RAM etc, particularly for LSP mode
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
 ;; Don't show the startup message.
 (setq inhibit-startup-message t
       inhibit-startup-echo-area-message "jterk"
@@ -21,9 +25,7 @@
 ;; Bootstrap `use-package'
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-(package-initialize)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -38,13 +40,13 @@
 (add-to-list 'load-path (concat my-home "emacs"))
 (add-to-list 'load-path (concat my-home "emacs-private"))
 
-(defvar jterk/dropbox)
+(defvar jterk/syncdir)
 
 (defun jterk/dir-or-nil (dir)
   "Return DIR if DIR exists and is a directory."
   (if (file-directory-p dir) dir nil))
 
-(setq jterk/dropbox
+(setq jterk/syncdir
       (or (jterk/dir-or-nil (concat my-home "Dropbox (Personal)"))
           (jterk/dir-or-nil (concat my-home "Dropbox"))))
 
@@ -78,15 +80,15 @@
          ("C-c b" . org-iswitchb))
   :config
   (defvar jterk/org-refile-target)
-  (setq jterk/org-refile-target (concat jterk/dropbox "/org/refile.org"))
+  (setq jterk/org-refile-target (concat jterk/syncdir "/org/refile.org"))
 
-  (setq org-agenda-files (list (concat jterk/dropbox "/org")))
+  (setq org-agenda-files (list (concat jterk/syncdir "/org")))
   (setq org-default-notes-file jterk/org-refile-target)
   (setq org-log-done t)
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
   (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
   (setq org-todo-keyword-faces
@@ -101,9 +103,9 @@
 
   (defvar org-mobile-inbox-for-pull)
   (defvar org-mobile-directory)
-  (setq org-directory (concat jterk/dropbox "/org"))
-  (setq org-mobile-inbox-for-pull (concat jterk/dropbox "/org/mobile-inbox.org"))
-  (setq org-mobile-directory (concat jterk/dropbox "/Apps/MobileOrg"))
+  (setq org-directory (concat jterk/syncdir "/org"))
+  (setq org-mobile-inbox-for-pull (concat jterk/syncdir "/org/mobile-inbox.org"))
+  (setq org-mobile-directory (concat jterk/syncdir "/Apps/MobileOrg"))
 
   ;; Don't convert to super/subscript unless an explicit '{' and '}' pair is present
   (setq org-use-sub-superscripts '{})
@@ -117,18 +119,18 @@
 
   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
   (setq org-capture-templates
-        (quote (("t" "todo" entry (file jterk/org-refile-target)
-                 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("r" "respond" entry (file jterk/org-refile-target)
-                 "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-                ("n" "note" entry (file jterk/org-refile-target)
-                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("m" "Meeting" entry (file jterk/org-refile-target)
-                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-                ("p" "Phone call" entry (file jterk/org-refile-target)
-                 "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-                ("h" "Habit" entry (file jterk/org-refile-target)
-                 "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+        `(("t" "todo" entry (file jterk/org-refile-target)
+           "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+          ("r" "respond" entry (file jterk/org-refile-target)
+           "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+          ("n" "note" entry (file jterk/org-refile-target)
+           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+          ("m" "Meeting" entry (file jterk/org-refile-target)
+           "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+          ("p" "Phone call" entry (file jterk/org-refile-target)
+           "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+          ("h" "Habit" entry (file jterk/org-refile-target)
+           "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
 
   ;; Ripped from http://doc.norang.ca/org-mode.html#Archiving
   (defun bh/skip-non-archivable-tasks ()
@@ -171,7 +173,7 @@
   :after org
   :config
   (custom-set-variables
-   '(org-journal-dir (concat jterk/dropbox "/org/journal"))
+   '(org-journal-dir (concat jterk/syncdir "/org/journal"))
    '(org-journal-date-format "%A %F")))
 
 ;; functions
@@ -570,8 +572,9 @@ Otherwise returns 't.  This is intended to be used as:
 (put 'upcase-region 'disabled nil)
 
 (use-package company
-  :ensure t)
-(global-company-mode t)
+  :ensure t
+  :config
+  (global-company-mode t))
 
 ;; The Silver Searcher
 (use-package ag
@@ -870,17 +873,7 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 
 (use-package go-mode
   :ensure t
-  :config
-  (add-hook 'go-mode-hook
-          (lambda ()
-                  (add-hook 'before-save-hook 'gofmt-before-save)
-                  (local-set-key (kbd "M-.") 'godef-jump)
-                  (local-set-key (kbd "M-*") 'pop-tag-mark)
-                  (auto-complete-mode 1))))
-
-(use-package go-autocomplete
-  :ensure t
-  :after go-mode)
+  )
 
 (use-package protobuf-mode
   :ensure t
@@ -916,7 +909,9 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package plantuml-mode
   :ensure t
   :config
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2018.11/libexec/plantuml.jar")
+  (setq plantuml-default-exec-mode 'executable)
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2020.2/libexec/plantuml.jar")
+  (setq plantuml-output-type "png")
   (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode)))
 
 (use-package flycheck-plantuml
@@ -942,10 +937,32 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (if (file-exists-p win-ag)
       (setq ag-executable win-ag)))
 
-(use-package emojify
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :hook
+  (go-mode . lsp)
+  (go-mode . (lambda ()
+               (add-hook 'before-save-hook #'lsp-format-buffer t t)
+               (add-hook 'before-save-hook #'lsp-organize-imports t t)))
+  :config
+  (use-package lsp-ui
+    :ensure t))
+
+;; Experimental trying ox-hugo
+(use-package ox-hugo
+  :ensure t
+  :after ox)
+
+;; TODO setup sync: http://pragmaticemacs.com/emacs/read-your-rss-feeds-in-emacs-with-elfeed/
+(use-package elfeed-org
   :ensure t
   :config
-  (global-emojify-mode))
+  (elfeed-org)
+  (setq rmh-elfeed-org-files (list (concat jterk/syncdir "/org/rss.org"))))
+
+(use-package elfeed
+  :ensure t)
 
 (use-package blog-publish)
 

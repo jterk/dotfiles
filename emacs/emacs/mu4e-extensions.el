@@ -185,6 +185,7 @@ Cancels `jterk/mu4e-update-timer-fn', if scheduled."
     (cancel-timer jterk/mu4e-update-timer)
     (setq jterk/mu4e-update-timer nil)))
 
+;; It seems that v. 1.4 of mu/mu4e broke this 
 (defun jterk/mu4e-install-advice ()
   "Activates mu4e advice.
 
