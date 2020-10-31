@@ -954,6 +954,16 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   :ensure t
   :after ox)
 
+;; TODO setup sync: http://pragmaticemacs.com/emacs/read-your-rss-feeds-in-emacs-with-elfeed/
+(use-package elfeed-org
+  :ensure t
+  :config
+  (elfeed-org)
+  (setq rmh-elfeed-org-files (list (concat jterk/syncdir "/org/rss.org"))))
+
+(use-package elfeed
+  :ensure t)
+
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
   (if (file-exists-p db-emacs)
