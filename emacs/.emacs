@@ -950,7 +950,10 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (use-package lsp-ui
     :ensure t))
 
-(use-package blog-publish)
+;; Experimental trying ox-hugo
+(use-package ox-hugo
+  :ensure t
+  :after ox)
 
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
