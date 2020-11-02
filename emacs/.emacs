@@ -962,7 +962,26 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (setq rmh-elfeed-org-files (list (concat jterk/syncdir "/org/rss.org"))))
 
 (use-package elfeed
-  :ensure t)
+  :ensure t
+  :config
+  (setq elfeed-db-directory (concat jterk/syncdir "/elfeed"))
+
+  (defun bjm/elfeed-load-db-and-open ()
+    "Wrapper to load the elfeed db from disk before opening"
+    (interactive)
+    (elfeed-db-load)
+    (elfeed)
+    (elfeed-search-update--force))
+
+  ;;write to disk when quiting
+  (defun bjm/elfeed-save-db-and-bury ()
+    "Wrapper to save the elfeed db to disk before burying buffer"
+    (interactive)
+    (elfeed-db-save)
+    (quit-window))
+
+  :bind (:map elfeed-search-mode-map
+              ("q" . bjm/elfeed-save-db-and-bury)))
 
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
