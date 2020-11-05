@@ -982,7 +982,7 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (defun bjm/elfeed-save-db-and-bury ()
     "Wrapper to save the elfeed db to disk before burying buffer"
     (interactive)
-    (elfeed-db-save)
+    (elfeed-db-unload)
     (quit-window))
 
   :bind (:map elfeed-search-mode-map
