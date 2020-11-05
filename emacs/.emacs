@@ -973,6 +973,11 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
     (elfeed)
     (elfeed-search-update--force))
 
+  ;; alternative using advice
+  (defadvice elfeed (before jterk/elfeed-load-db)
+    "Advise `elfeed' to load from disk when invoked."
+    (elfeed-db-load))
+
   ;;write to disk when quiting
   (defun bjm/elfeed-save-db-and-bury ()
     "Wrapper to save the elfeed db to disk before burying buffer"
