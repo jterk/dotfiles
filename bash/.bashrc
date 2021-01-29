@@ -27,3 +27,9 @@ if [[ -e $SSH_PAGEANT ]]
 then
     eval $(/usr/bin/ssh-pageant -r -a "/tmp/.ssh-pageant-$USERNAME")
 fi
+
+CARGO_ENV="$HOME/.cargo/env"
+if [[ -e $CARGO_ENV ]]
+then
+  source "$CARGO_ENV"
+fi

@@ -949,6 +949,10 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (use-package lsp-ui
     :ensure t))
 
+;; rustic - rust-mode fork with extras like automatic LSP integration
+(use-package rustic
+  :ensure t)
+
 ;; Experimental trying ox-hugo
 (use-package ox-hugo
   :ensure t
