@@ -55,6 +55,7 @@
   :unless (eq system-type 'windows-nt)
   :ensure t
   :config
+  (setq exec-path-from-shell-arguments '("-l"))
   (add-to-list `exec-path-from-shell-variables "GOPATH")
   (add-to-list `exec-path-from-shell-variables "VIRTUALENVWRAPPER_PYTHON")
   (add-to-list `exec-path-from-shell-variables "PROJECT_HOME")
@@ -79,13 +80,19 @@
          ("C-c a" . org-agenda)
          ("C-c b" . org-iswitchb))
   :config
-  (defvar jterk/org-refile-target)
-  (setq jterk/org-refile-target (concat jterk/syncdir "/org/refile.org"))
+  (defvar jterk/org-gtd-dir (concat jterk/syncdir "/gtd"))
+  (defvar jterk/org-gtd-inbox (concat jterk/org-gtd-dir "/inbox.org"))
+  (defvar jterk/org-gtd-projects (concat jterk/org-gtd-dir "/gtd.org"))
+  (defvar jterk/org-gtd-tickler (concat jterk/org-gtd-dir "/tickler.org"))
+  (defvar jterk/org-gtd-someday (concat jterk/org-gtd-dir "/someday.org"))
+  (setq org-agenda-files (list jterk/org-gtd-inbox jterk/org-gtd-projects jterk/org-gtd-tickler))
 
-  (setq org-agenda-files (list (concat jterk/syncdir "/org")))
-  (setq org-default-notes-file jterk/org-refile-target)
+  (setq org-default-notes-file jterk/org-gtd-inbox)
+  (setq org-refile-targets
+        `((,jterk/org-gtd-projects :maxlevel . 3)
+          (,jterk/org-gtd-someday :maxlevel . 1)
+          (,jterk/org-gtd-tickler :maxlevel . 2)))
   (setq org-log-done t)
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
@@ -113,24 +120,11 @@
   (setq org-export-with-sub-superscripts '{})
 
   (defvar org-capture-templates)
-  ;; (setq org-capture-templates
-  ;;       '(("t" "TODO" entry (file jterk/org-refile-target)
-  ;;          "* TODO %?\n  %i\n  %a")))
-
-  ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
   (setq org-capture-templates
-        `(("t" "todo" entry (file jterk/org-refile-target)
+        `(("t" "todo" entry (file+headline jterk/org-gtd-inbox "Tasks")
            "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-          ("r" "respond" entry (file jterk/org-refile-target)
-           "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-          ("n" "note" entry (file jterk/org-refile-target)
-           "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-          ("m" "Meeting" entry (file jterk/org-refile-target)
-           "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-          ("p" "Phone call" entry (file jterk/org-refile-target)
-           "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-          ("h" "Habit" entry (file jterk/org-refile-target)
-           "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
+          ("T" "tickler" entry (file+headline jterk/org-gtd-tickler "Tickler")
+           "*  %i%? \n %U")))
 
   ;; Ripped from http://doc.norang.ca/org-mode.html#Archiving
   (defun bh/skip-non-archivable-tasks ()
@@ -157,13 +151,23 @@
           next-headline))))
 
   (setq org-agenda-custom-commands
+        ;; Old "all stuff"
         '(("n" "Agenda and all TODOs"
            ((agenda "")
             (alltodo "")
             (tags "-REFILE/"
                   ((org-agenda-overriding-header "Tasks to Archive")
                    (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
-                   (org-tags-match-list-sublevels nil))))))))
+                   (org-tags-match-list-sublevels nil)))))
+          ;; GTD follows
+
+          ;; Office tasks. See https://emacs.cafe/emacs/orgmode/ETD/2017/06/30/orgmode-gtd.html for
+          ;; info on filtering to just the first task in each project
+          ("o" "At the office" tags-todo "@office"
+           ((org-agenda-overriding-header "Office")))
+          ("h" "At home" tags-todo "@home"
+           ((org-agenda-overriding-header "Home")))
+          )))
 
 (use-package org-velocity
   :after org)
