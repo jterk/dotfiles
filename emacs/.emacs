@@ -106,7 +106,7 @@
                 ("HOLD" :foreground "magenta" :weight bold)
                 ("CANCELLED" :foreground "forest green" :weight bold)
                 ("MEETING" :foreground "forest green" :weight bold)
-                ("PHONE" :foreground "forest green" :weight bold))))
+                ("PHONE" :foreground "forest greenn" :weight bold))))
 
   (defvar org-mobile-inbox-for-pull)
   (defvar org-mobile-directory)
@@ -118,6 +118,10 @@
   (setq org-use-sub-superscripts '{})
   (defvar org-export-with-sub-superscripts)
   (setq org-export-with-sub-superscripts '{})
+
+  ;; Image resizing - this defaults to a width of 600 and allows for overriding inline if
+  ;; necessary. See the variable docs for details.
+  (setq org-image-actual-width '(600))
 
   (defvar org-capture-templates)
   (setq org-capture-templates
@@ -161,12 +165,14 @@
                    (org-tags-match-list-sublevels nil)))))
           ;; GTD follows
 
-          ;; Office tasks. See https://emacs.cafe/emacs/orgmode/ETD/2017/06/30/orgmode-gtd.html for
+          ;; Office tasks. See https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html for
           ;; info on filtering to just the first task in each project
           ("o" "At the office" tags-todo "@office"
            ((org-agenda-overriding-header "Office")))
           ("h" "At home" tags-todo "@home"
            ((org-agenda-overriding-header "Home")))
+          ("u" "Untagged" tags-todo "-@office-@home"
+           ((org-agenda-overriding-header "Untagged")))
           )))
 
 (use-package org-velocity
