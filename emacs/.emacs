@@ -980,6 +980,8 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   :config
   (setq elfeed-db-directory (concat jterk/syncdir "/elfeed"))
   (setq jterk/elfeed-lock-file (concat elfeed-db-directory "/.sync-lock"))
+  (add-hook 'elfeed-show-mode-hook
+            (lambda () (setq-local shr-width 80)))
 
   (defun bjm/elfeed-load-db-and-open ()
     "Wrapper to load the elfeed db from disk before opening"
@@ -1008,6 +1010,12 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 
   :bind (:map elfeed-search-mode-map
               ("q" . bjm/elfeed-save-db-and-bury)))
+
+(use-package elfeed-goodies
+  :ensure t
+  :config
+  (setq elfeed-goodies/entry-pane-position :bottom)
+  (elfeed-goodies/setup))
 
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
