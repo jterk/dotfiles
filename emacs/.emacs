@@ -27,6 +27,9 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
+;; Fix for https://github.com/melpa/melpa/issues/7238
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -130,6 +133,12 @@
           ("T" "tickler" entry (file+headline jterk/org-gtd-tickler "Tickler")
            "*  %i%? \n %U")))
 
+  (defvar org-capture-bookmark)
+  (setq org-capture-bookmark nil)
+
+  ;; Load habits module
+  (add-to-list 'org-modules 'org-habit)
+
   ;; Ripped from http://doc.norang.ca/org-mode.html#Archiving
   (defun bh/skip-non-archivable-tasks ()
     "Skip trees that are not available for archiving."
@@ -183,6 +192,7 @@
   :after org
   :config
   (custom-set-variables
+   '(org-journal-file-type 'yearly)
    '(org-journal-dir (concat jterk/syncdir "/org/journal"))
    '(org-journal-date-format "%A %F")))
 
@@ -588,7 +598,9 @@ Otherwise returns 't.  This is intended to be used as:
 
 ;; The Silver Searcher
 (use-package ag
-  :ensure t)
+  :ensure t
+  :config
+  (setq ag-highlight-search nil))
 
 ;; haskell mode
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
@@ -919,9 +931,10 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package plantuml-mode
   :ensure t
   :config
-  (setq plantuml-default-exec-mode 'executable)
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2020.2/libexec/plantuml.jar")
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2021.4/libexec/plantuml.jar")
+  (setq plantuml-jar-path nil)
   (setq plantuml-output-type "png")
+  (setq plantuml-indent-level 2)
   (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode)))
 
 (use-package flycheck-plantuml
@@ -957,7 +970,10 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
                (add-hook 'before-save-hook #'lsp-organize-imports t t)))
   :config
   (use-package lsp-ui
-    :ensure t))
+    :ensure t
+    :config
+    (setq lsp-ui-doc-position 'top)
+    (setq lsp-ui-doc-alignment 'window)))
 
 ;; rustic - rust-mode fork with extras like automatic LSP integration
 (use-package rustic
