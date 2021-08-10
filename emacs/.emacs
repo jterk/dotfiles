@@ -255,15 +255,6 @@ SEQUENCE."
   (add-hook 'mu4e-view-mode-hook 'mu4e-disable-trailing-whitespace-hook)
   (add-hook 'mu4e-view-mode-hook 'mu4e-configure-wrapping)
 
-  ;; By default, collapse TO and CC lists, in case they contain a lot of entries
-  (add-hook 'mu4e-view-mode-hook
-            (lambda ()
-              (let ((headers (list "To:" "Cc:")))
-                (dolist (header headers)
-                  (save-excursion
-                    (if (search-forward header nil 'true)
-                        (mu4e~view-header-field-fold)))))))
-
   ;; soft wrap when composing
   (add-hook 'mu4e-compose-mode-hook
             (lambda ()
