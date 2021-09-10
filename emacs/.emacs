@@ -62,6 +62,7 @@
   (add-to-list `exec-path-from-shell-variables "GOPATH")
   (add-to-list `exec-path-from-shell-variables "VIRTUALENVWRAPPER_PYTHON")
   (add-to-list `exec-path-from-shell-variables "PROJECT_HOME")
+  (add-to-list `exec-path-from-shell-variables "SHELL")
   (exec-path-from-shell-initialize))
 
 (setenv "LC_ALL" "en_US.UTF-8")
@@ -1023,6 +1024,13 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   :config
   (setq elfeed-goodies/entry-pane-position :bottom)
   (elfeed-goodies/setup))
+
+(use-package vterm
+  :unless (eq system-type 'windows-nt)
+  :ensure t
+  :config
+  (setq vterm-shell (getenv "SHELL"))
+  (add-hook 'vterm-mode-hook (lambda () (setq-local show-trailing-whitespace nil))))
 
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
