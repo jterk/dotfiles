@@ -53,6 +53,9 @@
       (or (jterk/dir-or-nil (concat my-home "Dropbox (Personal)"))
           (jterk/dir-or-nil (concat my-home "Dropbox"))))
 
+(defvar jterk/dbx-syncdir
+  (jterk/dir-or-nil (concat my-home "Dropbox Dropbox/Jason Terk")))
+
 ;; Configure PATH related vars from
 (use-package exec-path-from-shell
   :unless (eq system-type 'windows-nt)
@@ -89,6 +92,7 @@
   (defvar jterk/org-gtd-projects (concat jterk/org-gtd-dir "/gtd.org"))
   (defvar jterk/org-gtd-tickler (concat jterk/org-gtd-dir "/tickler.org"))
   (defvar jterk/org-gtd-someday (concat jterk/org-gtd-dir "/someday.org"))
+
   (setq org-agenda-files (list jterk/org-gtd-inbox jterk/org-gtd-projects jterk/org-gtd-tickler))
 
   (setq org-default-notes-file jterk/org-gtd-inbox)
@@ -96,6 +100,25 @@
         `((,jterk/org-gtd-projects :maxlevel . 3)
           (,jterk/org-gtd-someday :maxlevel . 1)
           (,jterk/org-gtd-tickler :maxlevel . 2)))
+
+  (if jterk/dbx-syncdir
+      (progn
+        ;; define work specific files
+        (defvar jterk/dbx-org-gtd-dir (concat jterk/dbx-syncdir "/gtd"))
+        (defvar jterk/dbx-org-gtd-inbox (concat jterk/dbx-org-gtd-dir "/inbox.org"))
+        (defvar jterk/dbx-org-gtd-projects (concat jterk/dbx-org-gtd-dir "/gtd.org"))
+        (defvar jterk/dbx-org-gtd-tickler (concat jterk/dbx-org-gtd-dir "/tickler.org"))
+        (defvar jterk/dbx-org-gtd-someday (concat jterk/dbx-org-gtd-dir "/someday.org"))
+        ;; configure for work
+        (setq org-default-notes-file jterk/dbx-org-gtd-inbox)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-inbox)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-projects)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-someday)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-tickler)
+        (add-to-list 'org-refile-targets `(,jterk/dbx-org-gtd-projects :maxlevel . 3))
+        (add-to-list 'org-refile-targets `(,jterk/dbx-org-gtd-someday :maxlevel . 1))
+        (add-to-list 'org-refile-targets `(,jterk/dbx-org-gtd-tickler :maxlevel . 2))))
+
   (setq org-log-done t)
 
   (setq org-todo-keywords
@@ -194,7 +217,9 @@
   :config
   (custom-set-variables
    '(org-journal-file-type 'yearly)
-   '(org-journal-dir (concat jterk/syncdir "/org/journal"))
+   ;; Journal uses work dir if present, otherwise personal
+   '(org-journal-dir
+     (concat (or (jterk/dir-or-nil jterk/dbx-syncdir) jterk/syncdir) "/org/journal"))
    '(org-journal-date-format "%A %F")))
 
 ;; functions
