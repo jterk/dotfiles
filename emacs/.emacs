@@ -945,10 +945,11 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
+;; TODO: dynamically obtain the jar path, or figure out how to use the executable in the path
 (use-package plantuml-mode
   :ensure t
   :config
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2021.4/libexec/plantuml.jar")
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2021.10/libexec/plantuml.jar")
   (setq plantuml-jar-path nil)
   (setq plantuml-output-type "png")
   (setq plantuml-indent-level 2)
