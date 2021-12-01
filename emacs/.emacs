@@ -78,10 +78,8 @@
 (setq custom-file "~/tmp/custom.el")
 
 ;; org
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-
 (use-package org
-  :ensure org-plus-contrib
+  :ensure t
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
          ("C-c a" . org-agenda)
@@ -207,6 +205,10 @@
           ("u" "Untagged" tags-todo "-@office-@home"
            ((org-agenda-overriding-header "Untagged")))
           )))
+
+(use-package org-contrib
+  :ensure t
+  :after org)
 
 (use-package org-velocity
   :after org)
@@ -995,7 +997,8 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 
 ;; rustic - rust-mode fork with extras like automatic LSP integration
 (use-package rustic
-  :ensure t)
+  :ensure t
+  :config)
 
 ;; Experimental trying ox-hugo
 (use-package ox-hugo
@@ -1057,6 +1060,12 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   :config
   (setq vterm-shell (getenv "SHELL"))
   (add-hook 'vterm-mode-hook (lambda () (setq-local show-trailing-whitespace nil))))
+
+;; view large files
+(use-package vlf
+  :ensure t
+  :config
+  (require 'vlf-setup))
 
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
