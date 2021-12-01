@@ -27,6 +27,9 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
+;; Fix for https://github.com/melpa/melpa/issues/7238
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -50,6 +53,9 @@
       (or (jterk/dir-or-nil (concat my-home "Dropbox (Personal)"))
           (jterk/dir-or-nil (concat my-home "Dropbox"))))
 
+(defvar jterk/dbx-syncdir
+  (jterk/dir-or-nil (concat my-home "Dropbox Dropbox/Jason Terk")))
+
 ;; Configure PATH related vars from
 (use-package exec-path-from-shell
   :unless (eq system-type 'windows-nt)
@@ -59,6 +65,7 @@
   (add-to-list `exec-path-from-shell-variables "GOPATH")
   (add-to-list `exec-path-from-shell-variables "VIRTUALENVWRAPPER_PYTHON")
   (add-to-list `exec-path-from-shell-variables "PROJECT_HOME")
+  (add-to-list `exec-path-from-shell-variables "SHELL")
   (exec-path-from-shell-initialize))
 
 (setenv "LC_ALL" "en_US.UTF-8")
@@ -85,6 +92,7 @@
   (defvar jterk/org-gtd-projects (concat jterk/org-gtd-dir "/gtd.org"))
   (defvar jterk/org-gtd-tickler (concat jterk/org-gtd-dir "/tickler.org"))
   (defvar jterk/org-gtd-someday (concat jterk/org-gtd-dir "/someday.org"))
+
   (setq org-agenda-files (list jterk/org-gtd-inbox jterk/org-gtd-projects jterk/org-gtd-tickler))
 
   (setq org-default-notes-file jterk/org-gtd-inbox)
@@ -92,6 +100,25 @@
         `((,jterk/org-gtd-projects :maxlevel . 3)
           (,jterk/org-gtd-someday :maxlevel . 1)
           (,jterk/org-gtd-tickler :maxlevel . 2)))
+
+  (if jterk/dbx-syncdir
+      (progn
+        ;; define work specific files
+        (defvar jterk/dbx-org-gtd-dir (concat jterk/dbx-syncdir "/gtd"))
+        (defvar jterk/dbx-org-gtd-inbox (concat jterk/dbx-org-gtd-dir "/inbox.org"))
+        (defvar jterk/dbx-org-gtd-projects (concat jterk/dbx-org-gtd-dir "/gtd.org"))
+        (defvar jterk/dbx-org-gtd-tickler (concat jterk/dbx-org-gtd-dir "/tickler.org"))
+        (defvar jterk/dbx-org-gtd-someday (concat jterk/dbx-org-gtd-dir "/someday.org"))
+        ;; configure for work
+        (setq org-default-notes-file jterk/dbx-org-gtd-inbox)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-inbox)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-projects)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-someday)
+        (add-to-list 'org-agenda-files jterk/dbx-org-gtd-tickler)
+        (add-to-list 'org-refile-targets `(,jterk/dbx-org-gtd-projects :maxlevel . 3))
+        (add-to-list 'org-refile-targets `(,jterk/dbx-org-gtd-someday :maxlevel . 1))
+        (add-to-list 'org-refile-targets `(,jterk/dbx-org-gtd-tickler :maxlevel . 2))))
+
   (setq org-log-done t)
 
   (setq org-todo-keywords
@@ -129,6 +156,12 @@
            "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
           ("T" "tickler" entry (file+headline jterk/org-gtd-tickler "Tickler")
            "*  %i%? \n %U")))
+
+  (defvar org-capture-bookmark)
+  (setq org-capture-bookmark nil)
+
+  ;; Load habits module
+  (add-to-list 'org-modules 'org-habit)
 
   ;; Ripped from http://doc.norang.ca/org-mode.html#Archiving
   (defun bh/skip-non-archivable-tasks ()
@@ -183,7 +216,10 @@
   :after org
   :config
   (custom-set-variables
-   '(org-journal-dir (concat jterk/syncdir "/org/journal"))
+   '(org-journal-file-type 'yearly)
+   ;; Journal uses work dir if present, otherwise personal
+   '(org-journal-dir
+     (concat (or (jterk/dir-or-nil jterk/dbx-syncdir) jterk/syncdir) "/org/journal"))
    '(org-journal-date-format "%A %F")))
 
 ;; functions
@@ -244,15 +280,6 @@ SEQUENCE."
   (add-hook 'mu4e-headers-mode-hook 'mu4e-disable-trailing-whitespace-hook)
   (add-hook 'mu4e-view-mode-hook 'mu4e-disable-trailing-whitespace-hook)
   (add-hook 'mu4e-view-mode-hook 'mu4e-configure-wrapping)
-
-  ;; By default, collapse TO and CC lists, in case they contain a lot of entries
-  (add-hook 'mu4e-view-mode-hook
-            (lambda ()
-              (let ((headers (list "To:" "Cc:")))
-                (dolist (header headers)
-                  (save-excursion
-                    (if (search-forward header nil 'true)
-                        (mu4e~view-header-field-fold)))))))
 
   ;; soft wrap when composing
   (add-hook 'mu4e-compose-mode-hook
@@ -588,7 +615,9 @@ Otherwise returns 't.  This is intended to be used as:
 
 ;; The Silver Searcher
 (use-package ag
-  :ensure t)
+  :ensure t
+  :config
+  (setq ag-highlight-search nil))
 
 ;; haskell mode
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
@@ -919,9 +948,10 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 (use-package plantuml-mode
   :ensure t
   :config
-  (setq plantuml-default-exec-mode 'executable)
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2020.2/libexec/plantuml.jar")
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/1.2021.4/libexec/plantuml.jar")
+  (setq plantuml-jar-path nil)
   (setq plantuml-output-type "png")
+  (setq plantuml-indent-level 2)
   (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode)))
 
 (use-package flycheck-plantuml
@@ -958,7 +988,10 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (js-mode . lsp)
   :config
   (use-package lsp-ui
-    :ensure t)
+    :ensure t
+    :config
+    (setq lsp-ui-doc-position 'top)
+    (setq lsp-ui-doc-alignment 'window)))
 
   ;; rustic - rust-mode fork with extras like automatic LSP integration
   (use-package rustic
@@ -985,6 +1018,13 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
 ;; TODO: setup
 (use-package elfeed-protocol
   :ensure t)
+
+(use-package vterm
+  :unless (eq system-type 'windows-nt)
+  :ensure t
+  :config
+  (setq vterm-shell (getenv "SHELL"))
+  (add-hook 'vterm-mode-hook (lambda () (setq-local show-trailing-whitespace nil))))
 
 ;; Stuff for work. Do all of this last so that it can override anything set above.
 (let ((db-emacs (concat my-home "Dropbox Dropbox/Jason Terk/emacs")))
