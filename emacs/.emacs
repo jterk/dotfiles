@@ -988,6 +988,7 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   (go-mode . (lambda ()
                (add-hook 'before-save-hook #'lsp-format-buffer t t)
                (add-hook 'before-save-hook #'lsp-organize-imports t t)))
+  (js-mode . lsp)
   :config
   (use-package lsp-ui
     :ensure t
@@ -1006,53 +1007,21 @@ Returns t if eshell-watch-for-password-prompt should be invoked."
   :after ox)
 
 ;; TODO setup sync: http://pragmaticemacs.com/emacs/read-your-rss-feeds-in-emacs-with-elfeed/
-(use-package elfeed-org
-  :ensure t
-  :config
-  (elfeed-org)
-  (setq rmh-elfeed-org-files (list (concat jterk/syncdir "/org/rss.org"))))
-
 (use-package elfeed
   :ensure t
   :config
-  (setq elfeed-db-directory (concat jterk/syncdir "/elfeed"))
-  (setq jterk/elfeed-lock-file (concat elfeed-db-directory "/.sync-lock"))
   (add-hook 'elfeed-show-mode-hook
-            (lambda () (setq-local shr-width 80)))
-
-  (defun bjm/elfeed-load-db-and-open ()
-    "Wrapper to load the elfeed db from disk before opening"
-    (interactive)
-    (elfeed-db-load)
-    (elfeed)
-    (elfeed-search-update--force))
-
-  ;; alternative using advice
-  (define-advice elfeed (:before-while nil jterk/elfeed-load-db)
-    "Advise `elfeed' to load from disk when invoked."
-    (if (or (not (file-exists-p jterk/elfeed-lock-file))
-            (y-or-n-p "Elfeed open elsewhere, proceed? "))
-        (progn
-          (message "!")
-          (write-region "" nil jterk/elfeed-lock-file)
-          (elfeed-db-load))))
-
-  ;;write to disk when quiting
-  (defun bjm/elfeed-save-db-and-bury ()
-    "Wrapper to save the elfeed db to disk before burying buffer"
-    (interactive)
-    (elfeed-db-unload)
-    (quit-window)
-    (delete-file jterk/elfeed-lock-file))
-
-  :bind (:map elfeed-search-mode-map
-              ("q" . bjm/elfeed-save-db-and-bury)))
+            (lambda () (setq-local shr-width 80))))
 
 (use-package elfeed-goodies
   :ensure t
   :config
   (setq elfeed-goodies/entry-pane-position :bottom)
   (elfeed-goodies/setup))
+
+;; TODO: setup
+(use-package elfeed-protocol
+  :ensure t)
 
 (use-package vterm
   :unless (eq system-type 'windows-nt)
