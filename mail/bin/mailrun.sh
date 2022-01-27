@@ -22,7 +22,7 @@ monitor() {
 
   while ps $pid &>/dev/null; do
     if (( i++ > 29 )); then
-      echo "Max checks reached. Sending SIGKILL to ${pid}..." >&2
+      echo "`date` - Max checks reached. Sending SIGKILL to ${pid}..." >&2
       kill -9 $pid; return 1
     fi
 
@@ -38,7 +38,7 @@ then
 
       if ps $pid &>/dev/null
       then
-          echo "Process $pid already running. Exiting..." >&2
+          echo "`date` - Process $pid already running. Exiting..." >&2
           exit 1
       fi
 fi
@@ -51,15 +51,15 @@ if [ -e $FULL_SYNC_FILE ] ; then
     # echo $time_diff
     # echo $FULL_SYNC_INTERVAL
     if [ ${time_diff} -gt ${FULL_SYNC_INTERVAL} ] ; then
-        # echo "Last full sync was long ago, performing full sync."
+        echo "`date` - Last full sync was long ago, performing full sync."
         touch $FULL_SYNC_FILE
         $FULL_SYNC_COMMAND & monitor $!
     else
-        # echo "Performing partial sync"
+        echo "`date` - Performing partial sync"
         $INBOX_SYNC_COMMAND & monitor $!
     fi
 else
-    # echo "No last-full-sync file, performing full sync."
+    echo "`date` - No last-full-sync file, performing full sync."
     touch $FULL_SYNC_FILE
     $FULL_SYNC_COMMAND & monitor $!
 fi
