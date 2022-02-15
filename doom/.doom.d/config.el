@@ -3,12 +3,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
-
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -25,7 +19,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-solarized-dark)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -54,3 +48,10 @@
 ;; they are implemented.
 (map! "C-x C-m" #'execute-extended-command)
 (map! "C-w" #'backward-kill-word)
+(map! "C-x u" #'browse-url-at-point)
+
+;; With all that out of the way, load whatever specific environment we need, and
+;; then check that all necessary bits are present
+(load! "context-config")
+
+;; TODO: assert that email etc. are configured
