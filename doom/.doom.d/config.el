@@ -45,9 +45,14 @@
 (map! "C-x C-m" #'execute-extended-command)
 (map! "C-w" #'backward-kill-word)
 (map! "C-x u" #'browse-url-at-point)
+(map! "C-x C-k" #'kill-region)
 
 ;; With all that out of the way, load whatever specific environment we need, and
 ;; then check that all necessary bits are present
 (load! "context-config")
 
 ;; TODO: assert that email etc. are configured
+;; things interested in:
+;; * user-full-name is set
+;; * user-mail-address is set
+;; * org-directory is set
