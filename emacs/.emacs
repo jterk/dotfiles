@@ -23,6 +23,7 @@
       initial-scratch-message nil)
 
 ;;; Packages
+(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 ;;; Appearances _are_ important
