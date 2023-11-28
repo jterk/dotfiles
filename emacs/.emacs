@@ -177,6 +177,16 @@
 (add-to-list 'auto-mode-alist '("\\.go$" . go-mode))
 (add-hook 'go-ts-mode-hook 'eglot-ensure)
 
+;; Plant UML
+(use-package plantuml-mode
+  :ensure t
+  :config
+  (setq plantuml-default-exec-mode 'executable)
+  (setq plantuml-output-type "png")
+  (setq plantuml-indent-level 2)
+  (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode))
+  )
+
 ;; Protocol Buffers
 (use-package protobuf-mode
   :ensure t)
@@ -188,6 +198,7 @@
 (add-to-list 'eglot-server-programs '(python-ts-mode . ("pylsp")))
 
 ;; Typescript
+(add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-mode))
 
 ;; YAML
 (use-package yaml-mode
@@ -213,6 +224,7 @@
 (setq truncate-partial-width-windows t)
 
 ;;; Bookkeeping
+;; Consider replacing with no-littering https://github.com/emacscollective/no-littering
 ;; Keep various files in ~/tmp.
 (setq backup-directory-alist '(("." . "~/tmp/backups")))
 (setq ido-save-directory-list-file "~/tmp/ido.last")
