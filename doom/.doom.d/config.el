@@ -25,7 +25,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -46,6 +45,8 @@
 (map! "C-w" #'backward-kill-word)
 (map! "C-x u" #'browse-url-at-point)
 (map! "C-x C-k" #'kill-region)
+
+(exec-path-from-shell-initialize)
 
 ;; With all that out of the way, load whatever specific environment we need, and
 ;; then check that all necessary bits are present
