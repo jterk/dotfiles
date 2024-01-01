@@ -152,6 +152,7 @@
       '((go "https://github.com/tree-sitter/tree-sitter-go" "master" "src")
         (gomod "https://github.com/camdencheek/tree-sitter-go-mod" "main" "src")
         (python "https://github.com/tree-sitter/tree-sitter-python")
+        (rust "https://github.com/tree-sitter/tree-sitter-rust")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
         (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
 
@@ -197,6 +198,22 @@
 (add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
 (add-to-list 'eglot-server-programs '(python-ts-mode . ("pylsp")))
+
+;; Automatically detect the right python environment
+(use-package pet
+  :ensure t
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
+
+;; Rust
+(use-package rustic
+  :ensure t
+  :config
+  (setq rustic-lsp-client 'eglot))
+
+;; TOML
+(use-package toml-mode
+  :ensure t)
 
 ;; Typescript
 (add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-mode))
