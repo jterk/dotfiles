@@ -141,6 +141,10 @@
 (use-package ag
   :ensure t)
 
+;; GPT shell
+(use-package chatgpt-shell
+  :ensure t)
+
 ;;; Documentation
 
 (setq Info-additional-directory-list (list "~/docs/info"))
