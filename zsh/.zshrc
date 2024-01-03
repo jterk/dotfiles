@@ -1,3 +1,10 @@
+#!/usr/bin/env zsh
+
+# system-wide environment settings for zsh(1)
+if [ -x /usr/libexec/path_helper ]; then
+    eval `/usr/libexec/path_helper -s`
+fi
+
 # From https://raw.githubusercontent.com/akermu/emacs-libvterm/master/etc/emacs-vterm-zsh.sh
 # Some of the most useful features in emacs-libvterm require shell-side
 # configurations. The main goal of these additional functions is to enable the
