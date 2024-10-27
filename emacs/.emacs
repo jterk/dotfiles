@@ -160,6 +160,7 @@
       '((go "https://github.com/tree-sitter/tree-sitter-go" "master" "src")
         (gomod "https://github.com/camdencheek/tree-sitter-go-mod" "main" "src")
         (json "https://github.com/tree-sitter/tree-sitter-json" "master" "src")
+        (php "https://github.com/tree-sitter/tree-sitter-php" "master" "php/src")
         (python "https://github.com/tree-sitter/tree-sitter-python")
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
@@ -168,6 +169,7 @@
 (setq major-mode-remap-alist
       '((go-mode . go-ts-mode)
         (json-mode json-ts-mode)
+        (php-mode . php-ts-mode)
 	      (python-mode . python-ts-mode)
 	      (tsx-mode . tsx-ts-mode)
 	      (typescript-mode . typescript-ts-mode)))
@@ -193,6 +195,14 @@
 (use-package json-mode
   :ensure t)
 
+;; PHP
+(use-package php-mode
+  :ensure t)
+
+;; TODO Not on melpa/elpa needs alternative install
+;; (use-package php-ts-mode
+;;  :ensure t)
+
 ;; Plant UML
 (use-package plantuml-mode
   :ensure t
@@ -212,6 +222,7 @@
 (add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
 (add-to-list 'eglot-server-programs '(python-ts-mode . ("pylsp" "-vv" "--log-file" "/Users/jterk/tmp/pylsp.log")))
+;; (add-to-list 'eglot-server-programs '(python-ts-mode . ("pylsp")))
 
 ;; Automatically detect the right python environment
 (use-package pet
@@ -235,6 +246,10 @@
 
 ;; YAML
 (use-package yaml-mode
+  :ensure t)
+
+;; Caddyfiles
+(use-package caddyfile-mode
   :ensure t)
 
 ;;; Formatting
