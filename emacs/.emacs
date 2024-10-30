@@ -145,6 +145,10 @@
 (use-package chatgpt-shell
   :ensure t)
 
+;; restclient
+(use-package restclient
+  :ensure t)
+
 ;;; Documentation
 
 (setq Info-additional-directory-list (list "~/docs/info"))
@@ -155,6 +159,7 @@
 (setq treesit-language-source-alist
       '((go "https://github.com/tree-sitter/tree-sitter-go" "master" "src")
         (gomod "https://github.com/camdencheek/tree-sitter-go-mod" "main" "src")
+        (json "https://github.com/tree-sitter/tree-sitter-json" "master" "src")
         (python "https://github.com/tree-sitter/tree-sitter-python")
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
@@ -162,9 +167,10 @@
 
 (setq major-mode-remap-alist
       '((go-mode . go-ts-mode)
-	(python-mode . python-ts-mode)
-	(tsx-mode . tsx-ts-mode)
-	(typescript-mode . typescript-ts-mode)))
+        (json-mode json-ts-mode)
+	      (python-mode . python-ts-mode)
+	      (tsx-mode . tsx-ts-mode)
+	      (typescript-mode . typescript-ts-mode)))
 
 ;; bazel
 (use-package bazel
@@ -182,6 +188,10 @@
 
 (add-to-list 'auto-mode-alist '("\\.go$" . go-mode))
 (add-hook 'go-ts-mode-hook 'eglot-ensure)
+
+;; JSON
+(use-package json-mode
+  :ensure t)
 
 ;; Plant UML
 (use-package plantuml-mode
@@ -201,7 +211,7 @@
 ;; Use python-mode for pystachio files
 (add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
-(add-to-list 'eglot-server-programs '(python-ts-mode . ("pylsp")))
+(add-to-list 'eglot-server-programs '(python-ts-mode . ("pylsp" "-vv" "--log-file" "/Users/jterk/tmp/pylsp.log")))
 
 ;; Automatically detect the right python environment
 (use-package pet
@@ -221,6 +231,7 @@
 
 ;; Typescript
 (add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-mode))
+(add-hook 'tsx-ts-mode-hook 'eglot-ensure)
 
 ;; YAML
 (use-package yaml-mode
@@ -248,11 +259,10 @@
 ;;; Bookkeeping
 ;; Consider replacing with no-littering https://github.com/emacscollective/no-littering
 ;; Keep various files in ~/tmp.
-(setq backup-directory-alist '(("." . "~/tmp/backups")))
-(setq ido-save-directory-list-file "~/tmp/ido.last")
-(setq recentf-save-file "~/tmp/recentf")
-(setq semanticdb-default-save-directory "~/tmp/semantic.cache")
-(setq wisent-log-file "~/tmp/wisent.output")
+(use-package no-littering
+  :ensure t
+  :config
+  (no-littering-theme-backups))
 
 ;; effectively disable customization by shunting it to an unused file
 (if (not (file-directory-p "~/tmp"))
@@ -260,7 +270,8 @@
 (setq custom-file "~/tmp/custom.el")
 
 ;; Don't make me type 'yes'. Ever.
-(defalias 'yes-or-no-p 'y-or-n-p)
+;;(defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-short-answers t)
 
 ;; Emacs server
 (setenv "EDITOR" "emacsclient")
@@ -277,4 +288,5 @@
 ;;; Context specific
 (add-to-list 'load-path (concat (getenv "HOME") "/emacs"))
 (use-package context-init
-  :if (file-exists-p "emacs/context-init.el"))
+  :if (file-exists-p (concat (getenv "HOME") "/emacs/context-init.el")))
+
