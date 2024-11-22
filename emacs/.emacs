@@ -180,6 +180,10 @@
   :config
   (add-to-list 'auto-mode-alist '("'\\BUILD.in\\'" . bazel-mode)))
 
+;; docker files
+(use-package dockerfile-mode
+  :ensure t)
+
 ;; eglot for LSP
 (use-package eglot
   :ensure t)
