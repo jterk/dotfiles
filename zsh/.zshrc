@@ -60,5 +60,12 @@ add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
 vterm_prompt_end() {
     vterm_printf "51;A$(whoami)@$(hostname):$(pwd)"
 }
+
 setopt PROMPT_SUBST
 PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+
+# .context-zshrc contains context-specific configuration
+CONTEXT_RC="$HOME/.context-zshrc"
+if [[ -e "$CONTEXT_RC" ]]; then
+    source "$CONTEXT_RC"
+fi
