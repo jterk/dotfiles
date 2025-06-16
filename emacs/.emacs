@@ -90,9 +90,9 @@
 (use-package magit
   :ensure t)
 
-(use-package forge
-  :ensure t
-  :after magit)
+;; Get URLs for files in github (and other) repos
+(use-package browse-at-remote
+  :ensure t)
 
 ;; Org
 (use-package org
