@@ -254,8 +254,13 @@
   :ensure t)
 
 ;; Typescript
-(add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-mode))
-(add-hook 'tsx-ts-mode-hook 'eglot-ensure)
+(use-package typescript-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-mode))
+  (add-hook 'tsx-ts-mode-hook 'eglot-ensure)
+  (add-hook 'typescript-ts-mode-hook 'eglot-ensure))
 
 ;; YAML
 (use-package yaml-mode
