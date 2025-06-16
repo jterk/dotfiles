@@ -103,6 +103,10 @@
   :ensure t
   :after 'org)
 
+(use-package verb
+  :ensure t
+  :after 'org)
+
 ;; Vertico completion https://github.com/minad/vertico
 (use-package vertico
   :ensure t
