@@ -311,12 +311,20 @@
 (server-start)
 
 ;;; Shells
+(defun jterk/hide-trailing-whitespace-hook ()
+  "Hook to hide trailing whitespace"
+  (setq-local show-trailing-whitespace nil))
+
 (use-package vterm
   :unless (eq system-type 'windows-nt)
   :ensure t
   :config
   (setq vterm-shell (getenv "SHELL"))
-  (add-hook 'vterm-mode-hook (lambda () (setq-local show-trailing-whitespace nil))))
+  (add-hook 'vterm-mode-hook 'jterk/hide-trailing-whitespace-hook))
+
+(use-package eshell
+  :config
+  (add-hook 'eshell-mode-hook 'jterk/hide-trailing-whitespace-hook))
 
 ;;; Context specific
 (add-to-list 'load-path (concat (getenv "HOME") "/emacs"))
