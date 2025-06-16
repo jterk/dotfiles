@@ -141,6 +141,11 @@
 
 ;; Maybe embark/embark-consult? https://github.com/oantolin/embark
 
+(use-package flymake-popon
+  :ensure t
+  :config
+  (add-hook 'flymake-mode-hook 'flymake-popon-mode))
+
 ;; ag
 (use-package ag
   :ensure t)
