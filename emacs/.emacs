@@ -210,6 +210,15 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.go$" . go-mode))
   (add-hook 'go-ts-mode-hook 'eglot-ensure))
+  (add-hook
+   'go-ts-mode-hook
+   (lambda()
+     (add-hook
+      'write-contents-functions
+      (lambda()
+        (save-excursion
+          (gofmt))
+        nil)))))
 
 ;; JSON
 (use-package json-mode
