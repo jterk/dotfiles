@@ -21,6 +21,8 @@ end
 
 local mash = {"ctrl", "shift"}
 hotkey.bind(mash, 'n', grid.pushWindowNextScreen)
+hotkey.bind(mash, 's', grid.maximizeWindow) -- full screen
 hotkey.bind(mash, 'a', gridset(0, 0, 1, 2)) -- left half
-hotkey.bind(mash, 's', grid.maximizeWindow)
 hotkey.bind(mash, 'd', gridset(1, 0, 1, 2)) -- right half
+hotkey.bind(mash, 'w', gridset(0, 0, 2, 1)) -- top half
+hotkey.bind(mash, 'x', gridset(0, 1, 2, 1)) -- bottom half
