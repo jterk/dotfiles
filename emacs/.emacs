@@ -266,8 +266,7 @@
   :config
   ;; Use python-mode for pystachio files
   (add-to-list 'auto-mode-alist '("\\.pyst$" . python-mode))
-  (add-hook 'python-ts-mode-hook 'eglot-ensure)
-  (add-to-list 'eglot-server-programs '(python-ts-mode . ("pylsp" "-vv" "--log-file" "/Users/jterk/tmp/pylsp.log"))))
+  (add-hook 'python-ts-mode-hook 'eglot-ensure))
 
 ;; Automatically detect the right python environment
 (use-package pet
