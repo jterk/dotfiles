@@ -48,6 +48,9 @@
 
 (column-number-mode t)
 
+;; Show line numbers for modes that inherit from prog-mode
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
 ;;; key bind crutches
 
 ;; Make it harder to quit emacs.
