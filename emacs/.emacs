@@ -209,7 +209,7 @@
   :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.go$" . go-mode))
-  (add-hook 'go-ts-mode-hook 'eglot-ensure))
+  (add-hook 'go-ts-mode-hook 'eglot-ensure)
   (add-hook
    'go-ts-mode-hook
    (lambda()
