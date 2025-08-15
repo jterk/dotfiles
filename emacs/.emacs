@@ -203,10 +203,10 @@
 
 ;; Go
 (use-package go-mode
-  :ensure t)
-
-(add-to-list 'auto-mode-alist '("\\.go$" . go-mode))
-(add-hook 'go-ts-mode-hook 'eglot-ensure)
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.go$" . go-mode))
+  (add-hook 'go-ts-mode-hook 'eglot-ensure))
 
 ;; JSON
 (use-package json-mode
