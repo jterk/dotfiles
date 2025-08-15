@@ -233,8 +233,11 @@
   (add-hook 'markdown-mode-hook 'visual-line-mode))
 
 ;; PHP
-(use-package php-mode
-  :ensure t)
+(use-package web-mode
+  :ensure t
+  :config
+  (add-hook 'web-mode-hook (lambda () (setq web-mode-markup-indent-offset 2)
+                             (setq web-mode-code-indent-offset 2))))
 
 ;; TODO Not on melpa/elpa needs alternative install
 ;; (use-package php-ts-mode
