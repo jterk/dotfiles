@@ -111,6 +111,9 @@
   :ensure t
   :after 'org)
 
+(use-package htmlize
+  :ensure t)
+
 ;; Vertico completion https://github.com/minad/vertico
 (use-package vertico
   :ensure t
