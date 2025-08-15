@@ -333,6 +333,7 @@
   :ensure t
   :config
   (setq vterm-shell (getenv "SHELL"))
+  (setq vterm-max-scrollback 100000)
   (add-hook 'vterm-mode-hook 'jterk/hide-trailing-whitespace-hook))
 
 (use-package eshell
