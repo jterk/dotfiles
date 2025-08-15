@@ -181,7 +181,7 @@
 
 (setq major-mode-remap-alist
       '((go-mode . go-ts-mode)
-        (json-mode json-ts-mode)
+        (json-mode . json-ts-mode)
         (php-mode . php-ts-mode)
 	      (python-mode . python-ts-mode)
 	      (tsx-mode . tsx-ts-mode)
