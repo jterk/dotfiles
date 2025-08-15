@@ -214,6 +214,11 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)))
 
+;; Markdown
+(use-package markdown-mode
+  :ensure t
+  :config
+  (add-hook 'markdown-mode-hook 'visual-line-mode))
 
 ;; PHP
 (use-package php-mode
