@@ -210,7 +210,10 @@
 
 ;; JSON
 (use-package json-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)))
+
 
 ;; PHP
 (use-package php-mode
