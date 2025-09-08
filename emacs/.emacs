@@ -246,13 +246,11 @@
 ;; Plant UML
 (use-package plantuml-mode
   :ensure t
-  :after 'org
   :config
   (setq plantuml-default-exec-mode 'executable)
   (setq plantuml-output-type "png")
   (setq plantuml-indent-level 2)
   (setq org-plantuml-exec-mode 'plantuml)
-  (add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((plantuml . t))))
