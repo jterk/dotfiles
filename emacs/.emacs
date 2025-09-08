@@ -180,7 +180,8 @@
         (python "https://github.com/tree-sitter/tree-sitter-python")
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
+        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (prisma "https://github.com/victorhqc/tree-sitter-prisma" "main" "src")))
 
 (setq major-mode-remap-alist
       '((go-mode . go-ts-mode)
