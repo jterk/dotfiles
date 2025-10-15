@@ -343,7 +343,7 @@
 ;;; Shells
 (defun jterk/hide-trailing-whitespace-hook ()
   "Hook to hide trailing whitespace"
-  (setq-local show-trailing-whitespace nil))
+  (setq show-trailing-whitespace nil))
 
 (use-package vterm
   :unless (eq system-type 'windows-nt)
