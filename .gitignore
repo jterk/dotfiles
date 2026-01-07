@@ -2,3 +2,4 @@ emacs/flycheck_.emacs
 
 *.pyc
 .DS_Store
+.aider*

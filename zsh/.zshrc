@@ -7,6 +7,9 @@ export EDITOR=emacsclient
 #    eval `/usr/libexec/path_helper -s`
 #fi
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+
 # From https://raw.githubusercontent.com/akermu/emacs-libvterm/master/etc/emacs-vterm-zsh.sh
 # Some of the most useful features in emacs-libvterm require shell-side
 # configurations. The main goal of these additional functions is to enable the

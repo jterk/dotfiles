@@ -86,7 +86,7 @@
   :unless (eq system-type 'windows-nt)
   :ensure t
   :config
-  (setq exec-path-from-shell-arguments '("-l"))
+  (setq exec-path-from-shell-arguments '("-l" "-i"))
   (add-to-list `exec-path-from-shell-variables "SHELL")
   (exec-path-from-shell-initialize))
 
@@ -160,6 +160,15 @@
 ;; GPT shell
 (use-package chatgpt-shell
   :ensure t)
+
+;; aidermacs
+(use-package aidermacs
+  :ensure t
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
+  (setenv "OLLAMA_API_BASE" "http://ohgodsobig:11434")
+  (setq aidermacs-default-model "ollama_chat/qwen3:8b")
+  (setq aidermacs-backend 'vterm))
 
 ;; restclient
 (use-package restclient
