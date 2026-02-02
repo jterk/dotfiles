@@ -263,7 +263,14 @@
   (setq org-plantuml-exec-mode 'plantuml)
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((plantuml . t))))
+   '((plantuml . t)))
+
+  ;; plantuml-modes completion does not work for me; disable it
+  (defun jterk/plantuml-remove-completion-hook ()
+    (setq completion-at-point-functions (list 'tags-completion-at-point-function)))
+
+  :hook (plantuml-mode . jterk/plantuml-remove-completion-hook))
+
 
 ;; Protocol Buffers
 (use-package protobuf-mode
