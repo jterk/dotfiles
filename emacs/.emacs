@@ -299,6 +299,12 @@
 (use-package toml-mode
   :ensure t)
 
+;; node
+(use-package nvm
+  :ensure t
+  :config
+  (nvm-use "24"))
+
 ;; Typescript
 (use-package typescript-mode
   :ensure t
