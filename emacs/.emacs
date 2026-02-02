@@ -23,9 +23,12 @@
       initial-scratch-message nil)
 
 ;;; Packages
-(require 'package
-         :config
-         (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
+;; Added 2025-12-18 to get devel version of eglot to get "pull" diagnostic support
+;; https://github.com/joaotavora/eglot/discussions/1290
+(add-to-list 'package-archives '("gnu-devel" . "https://elpa.gnu.org/devel/"))
 
 ;;; Appearances _are_ important
 
