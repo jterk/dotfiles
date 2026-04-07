@@ -165,6 +165,8 @@
   :ensure t)
 
 ;; aidermacs
+;;
+;; experimenting with local LLM
 (use-package aidermacs
   :ensure t
   :bind (("C-c a" . aidermacs-transient-menu))
@@ -172,6 +174,21 @@
   (setenv "OLLAMA_API_BASE" "http://ohgodsobig:11434")
   (setq aidermacs-default-model "ollama_chat/qwen3:8b")
   (setq aidermacs-backend 'vterm))
+
+;; Other claude things to consider; claude-code.el hasn't been touched in a bit
+;;
+;; https://github.com/ywatanabe1989/emacs-claude-code - not updated in a while
+;;
+;; https://github.com/manzaltu/claude-code-ide.el - recently updated; seems most expansive. try this
+;; first?
+;;
+;; https://github.com/cpoile/claudemacs - recently updated
+(use-package claude-code-ide
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu)
+  :config
+  (setq claude-code-ide-window-width 110)
+  (claude-code-ide-emacs-tools-setup))
 
 ;; restclient
 (use-package restclient
