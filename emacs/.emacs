@@ -97,6 +97,11 @@
 (use-package magit
   :ensure t)
 
+;; Majutsu (like magit but jj)
+(use-package majutsu
+  :vc (:url "https://github.com/0WD0/majutsu")
+  :ensure t)
+
 ;; Get URLs for files in github (and other) repos
 (use-package browse-at-remote
   :ensure t)
@@ -232,7 +237,10 @@
 
 ;; eglot for LSP
 (use-package eglot
-  :ensure t)
+  :ensure t
+  :config
+  ;; attempting to resolve errors watching files...
+  (setq eglot-max-file-watches 5000))
 
 ;; Go
 (use-package go-mode
