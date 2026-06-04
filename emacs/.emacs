@@ -238,6 +238,9 @@
 ;; eglot for LSP
 (use-package eglot
   :ensure t
+  ;; pin to gnu-devel to get support for pull diagnostics
+  ;; https://github.com/joaotavora/eglot/discussions/1290
+  :pin gnu-devel
   :config
   ;; attempting to resolve errors watching files...
   (setq eglot-max-file-watches 5000))
