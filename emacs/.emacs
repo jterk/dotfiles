@@ -102,7 +102,7 @@
 
 ;; Majutsu (like magit but jj)
 (use-package majutsu
-  :vc (:url "https://github.com/0WD0/majutsu")
+  :vc (:url "https://github.com/0WD0/majutsu" :branch "main")
   :ensure t)
 
 ;; Get URLs for files in github (and other) repos
@@ -110,9 +110,22 @@
   :ensure t)
 
 ;; Org
+(add-to-list 'load-path "~/tmp/org-mode/lisp")
+
 (use-package org
   :config
-  (setq org-startup-indented t))
+  (setq org-startup-indented t)
+  ;; debugging org issue
+  ;;
+  ;; 2026-07-21 - commented out because Ihor reported that the cache optimization is disabled by
+  ;; default on main/bugfix now
+  ;;
+  ;; (setq org-element--cache-self-verify 'backtrace)
+  ;; (setq org-element-cache-persistent nil)
+  ;; (setq org-element--cache-diagnostics-level 3)
+  ;; (setq org-element--cache-diagnostics-ring-size 50000)
+  ;; (setq org-element--cache-disable-future-change-optimization t)
+  )
 
 (use-package org-roam
   :ensure t
@@ -246,7 +259,8 @@
   :pin gnu-devel
   :config
   ;; attempting to resolve errors watching files...
-  (setq eglot-max-file-watches 5000))
+  (setq eglot-max-file-watches 5000)
+  (setq eglot-watch-files-outside-project-root nil))
 
 ;; Go
 (use-package go-mode
@@ -336,6 +350,7 @@
 ;; node
 (use-package nvm
   :ensure t
+  :if (file-exists-p (concat (getenv "home") "/.nvm"))
   :config
   (nvm-use "24"))
 

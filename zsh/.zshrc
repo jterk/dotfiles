@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 export EDITOR=emacsclient
+export HOMEBREW_NO_ASK=true
 
 # system-wide environment settings for zsh(1)
 #if [ -x /usr/libexec/path_helper ]; then
@@ -69,6 +70,9 @@ PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 
 # .context-zshrc contains context-specific configuration
 CONTEXT_RC="$HOME/.context-zshrc"
+
 if [[ -e "$CONTEXT_RC" ]]; then
     source "$CONTEXT_RC"
 fi
+
+. "$HOME/.local/bin/env"
