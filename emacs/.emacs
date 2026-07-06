@@ -8,6 +8,9 @@
 ;;; TODO
 ;; [ ] org mode
 
+;; Temp fix for bad ~CC~ value
+(setenv "CC" "gcc")
+
 ;;; Startup/UI Tuning
 
 ;; Remove startup wait time.
