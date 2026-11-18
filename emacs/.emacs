@@ -196,6 +196,9 @@
   (setq aidermacs-default-model "ollama_chat/qwen3:8b")
   (setq aidermacs-backend 'vterm))
 
+(use-package ghostel
+  :ensure t)
+
 ;; Other claude things to consider; claude-code.el hasn't been touched in a bit
 ;;
 ;; https://github.com/ywatanabe1989/emacs-claude-code - not updated in a while
@@ -206,9 +209,11 @@
 ;; https://github.com/cpoile/claudemacs - recently updated
 (use-package claude-code-ide
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :after 'ghostel
   :bind ("C-c C-'" . claude-code-ide-menu)
   :config
   (setq claude-code-ide-window-width 110)
+  (setq claude-code-ide-terminal-backend 'ghostel)
   (claude-code-ide-emacs-tools-setup))
 
 ;; restclient
